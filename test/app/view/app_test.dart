@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:todo_bloc/app/app.dart';
-import 'package:todo_bloc/modules/landing_loading/view/landing_loading_view.dart';
+import 'package:todo_bloc/src/app/app.dart';
+import 'package:todo_bloc/src/modules/landing_loading/view/landing_loading_view.dart';
 
 void main() {
   group('App', () {
