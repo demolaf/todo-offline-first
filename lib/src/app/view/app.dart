@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_bloc/src/data/repositories/settings/settings_repository.dart';
+import 'package:todo_bloc/src/data/repositories/settings/settings_repository_impl.dart';
 import 'package:todo_bloc/src/l10n/l10n.dart';
 import 'package:todo_bloc/src/modules/landing_loading/view/landing_loading_view.dart';
 import 'package:todo_bloc/src/modules/settings/cubit/settings_cubit.dart';
-import 'package:todo_bloc/src/data/repositories/settings/settings_repository_impl.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -45,7 +45,8 @@ class _AppState extends State<App> {
                 // Use very subtly themed app bar elevation in light mode.
                 appBarElevation: 0.5,
                 useMaterial3: useMaterial3,
-                // We use the nicer Material-3 Typography in both M2 and M3 mode.
+                // We use the nicer Material-3 Typography in both M2 and
+                // M3 mode.
                 typography:
                     Typography.material2021(platform: defaultTargetPlatform),
               ),
@@ -54,7 +55,8 @@ class _AppState extends State<App> {
                 // Use a bit more themed elevated app bar in dark mode.
                 appBarElevation: 2,
                 useMaterial3: useMaterial3,
-                // We use the nicer Material-3 Typography in both M2 and M3 mode.
+                // We use the nicer Material-3 Typography in both M2 and M3
+                // mode.
                 typography:
                     Typography.material2021(platform: defaultTargetPlatform),
               ),

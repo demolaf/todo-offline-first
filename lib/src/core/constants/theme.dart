@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 class TodoBlocAppTheme {
+  // ignore: unused_field
   static const FlexSchemeData _myFlexScheme = FlexSchemeData(
     name: 'Midnight blue',
     description: 'Midnight blue theme, custom definition of all colors',
