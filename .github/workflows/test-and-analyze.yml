@@ -1,0 +1,18 @@
+name: Test & analyze
+
+on: [ push ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.1'
+          channel: 'stable'
+      - run: flutter pub get
+      - run: flutter pub run environment_config:generate
+      - run: flutter analyze
+      - run: flutter test
