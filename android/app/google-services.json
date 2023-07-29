@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1028681130752",
+    "project_id": "todo-bloc-sync",
+    "storage_bucket": "todo-bloc-sync.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028681130752:android:93686786e3716cb9e6c9e5",
+        "android_client_info": {
+          "package_name": "com.example.verygoodcore.todo_bloc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028681130752-1ots44hvomi98bfa34bcqm1pg1u4v0av.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyOnapUM-iv1lkt04BdsAFgltJtd2n5mA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028681130752-1ots44hvomi98bfa34bcqm1pg1u4v0av.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
