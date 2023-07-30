@@ -8,7 +8,7 @@ part 'home_bloc.freezed.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(const HomeState.initial()) {
     on<HomeEvent>((event, emit) {
-      // TODO: implement event handler
+      // TODO(demolaf): implement event handler
     });
   }
 }

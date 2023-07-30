@@ -8,7 +8,7 @@ part 'create_todo_bloc.freezed.dart';
 class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
   CreateTodoBloc() : super(const CreateTodoState.initial()) {
     on<CreateTodoEvent>((event, emit) {
-      // TODO: implement event handler
+      // TODO(demolaf): implement event handler
     });
   }
 }
