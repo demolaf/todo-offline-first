@@ -1,2 +1,1 @@
-abstract class SettingsRepository {
-}
+abstract class SettingsRepository {}
