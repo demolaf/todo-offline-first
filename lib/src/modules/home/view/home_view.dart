@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_bloc/src/core/enums.dart';
+import 'package:todo_bloc/src/core/shared/shared.dart';
+import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
+import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
+import 'package:todo_bloc/src/modules/connection_checker/bloc/connection_checker_bloc.dart';
 import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
+import 'package:todo_bloc/src/modules/home/bloc/home_bloc.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -9,7 +15,14 @@ class HomeView extends StatefulWidget {
   static Route<HomeView> route() {
     return MaterialPageRoute(
       builder: (context) {
-        return const HomeView();
+        return BlocProvider(
+          create: (context) {
+            return HomeBloc(
+              todoRepository: context.read<TodoRepository>(),
+            )..add(const HomeInitializationRequested());
+          },
+          child: const HomeView(),
+        );
       },
     );
   }
@@ -32,6 +45,23 @@ class _HomeViewState extends State<HomeView> {
   void dispose() {
     searchTextFieldFocusNode?.dispose();
     super.dispose();
+  }
+
+  void showSnackBar({required String message, Icon? icon}) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        CustomSnackBarBuilder(
+          icon: icon ??
+              Icon(
+                Icons.warning_rounded,
+                color: Colors.red.shade500,
+                size: 48,
+              ),
+          title: message,
+          // titleColor: Colors.white,
+        ),
+      );
   }
 
   @override
@@ -60,79 +90,108 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CupertinoSearchTextField(
-              prefixIcon: const Icon(Icons.search_rounded),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              focusNode: searchTextFieldFocusNode,
-              enabled: false,
-            ),
-            const SizedBox(height: 24),
-            const Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Welcome back!'),
-                    Text('John Doe'),
-                  ],
+      body: BlocListener<ConnectionCheckerBloc, ConnectionCheckerState>(
+        listener: (context, state) {
+          if (state is ConnectionCheckerStateReady) {
+            if (state.connected) {
+              showSnackBar(
+                icon: const Icon(
+                  Icons.check_rounded,
+                  color: Colors.green,
                 ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.maxFinite,
-              child: SegmentedButton<TodoStatus>(
-                showSelectedIcon: false,
-                segments: TodoStatus.values
-                    .map(
-                      (status) => ButtonSegment(
-                        value: status,
-                        label: Text(
-                          status.name.toUpperCase(),
-                          maxLines: 1,
-                        ),
+                message: 'Connected',
+              );
+            } else {
+              showSnackBar(
+                message: 'No Network',
+              );
+            }
+          }
+        },
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            if (state is! HomeStateReady) {
+              return const CircularProgressIndicator();
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CupertinoSearchTextField(
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    focusNode: searchTextFieldFocusNode,
+                    enabled: false,
+                  ),
+                  const SizedBox(height: 24),
+                  const Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Welcome back!'),
+                          Text('John Doe'),
+                        ],
                       ),
-                    )
-                    .toList(),
-                selected: {selected},
-                onSelectionChanged: (newSelection) {
-                  setState(() {
-                    selected = newSelection.first;
-                  });
-                },
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: SegmentedButton<TodoStatus>(
+                      showSelectedIcon: false,
+                      segments: TodoStatus.values
+                          .map(
+                            (status) => ButtonSegment(
+                              value: status,
+                              label: Text(
+                                status.name.toUpperCase(),
+                                maxLines: 1,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      selected: {selected},
+                      onSelectionChanged: (newSelection) {
+                        setState(() {
+                          selected = newSelection.first;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: PageView.builder(
+                      itemCount: TodoStatus.values.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      onPageChanged: (page) {
+                        setState(() {
+                          selected = page.todoStatus();
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        switch (selected) {
+                          case TodoStatus.today:
+                            return TodaysTodos(
+                              todos: state.todos,
+                            );
+                          case TodoStatus.upcoming:
+                            return Container();
+                          case TodoStatus.completed:
+                            return Container();
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: PageView.builder(
-                itemCount: TodoStatus.values.length,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (page) {
-                  setState(() {
-                    selected = page.todoStatus();
-                  });
-                },
-                itemBuilder: (context, index) {
-                  switch (selected) {
-                    case TodoStatus.today:
-                      return const TodaysTodos();
-                    case TodoStatus.upcoming:
-                      return Container();
-                    case TodoStatus.completed:
-                      return Container();
-                  }
-                },
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).push(
@@ -142,7 +201,7 @@ class _HomeViewState extends State<HomeView> {
         icon: const Icon(
           Icons.add_box_rounded,
         ),
-        label: const Text('Add Todo'),
+        label: const Text('Create Todo'),
       ),
     );
   }
@@ -150,15 +209,20 @@ class _HomeViewState extends State<HomeView> {
 
 class TodaysTodos extends StatelessWidget {
   const TodaysTodos({
+    required this.todos,
     super.key,
   });
+
+  final List<TodoDTO> todos;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: todos.length,
       itemBuilder: (context, index) {
-        return const TodoListItem();
+        return TodoListItem(
+          todo: todos[index],
+        );
       },
     );
   }
@@ -166,8 +230,11 @@ class TodaysTodos extends StatelessWidget {
 
 class TodoListItem extends StatelessWidget {
   const TodoListItem({
+    required this.todo,
     super.key,
   });
+
+  final TodoDTO todo;
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +262,7 @@ class TodoListItem extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Task Title'),
+                  Text(todo.title),
                   SizedBox(
                     width: 24,
                     child: IconButton(
