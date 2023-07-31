@@ -1,8 +1,11 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_bloc/src/core/enums.dart';
 import 'package:todo_bloc/src/core/extensions/date_time_helpers.dart';
+import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
+import 'package:todo_bloc/src/modules/create_todo/bloc/create_todo_bloc.dart';
 
 class CreateTodoView extends StatefulWidget {
   const CreateTodoView({required this.todoActionType, super.key});
@@ -10,7 +13,12 @@ class CreateTodoView extends StatefulWidget {
   static Route<CreateTodoView> route({required TodoActionType todoActionType}) {
     return MaterialPageRoute(
       builder: (context) {
-        return CreateTodoView(todoActionType: todoActionType);
+        return BlocProvider(
+          create: (context) => CreateTodoBloc(
+            todoRepository: context.read<TodoRepository>(),
+          )..add(const CreateTodoInitializationRequested()),
+          child: CreateTodoView(todoActionType: todoActionType),
+        );
       },
     );
   }
@@ -181,6 +189,17 @@ class _CreateTodoViewState extends State<CreateTodoView> {
             const SizedBox(height: 24),
             const Divider(),
             const SizedBox(height: 24),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Title'),
+                const SizedBox(height: 16),
+                TextFormField(),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const Divider(),
+            const SizedBox(height: 24),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,6 +215,9 @@ class _CreateTodoViewState extends State<CreateTodoView> {
                     cursorColor: Theme.of(context).colorScheme.primary,
                     backgroundCursorColor:
                         Theme.of(context).colorScheme.secondary,
+                    onChanged: (text) {
+                      context.read<CreateTodoBloc>().add(const CreateTodo());
+                    },
                   ),
                 ],
               ),
