@@ -1,6 +1,22 @@
 part of 'create_todo_bloc.dart';
 
-@freezed
-class CreateTodoEvent with _$CreateTodoEvent {
-  const factory CreateTodoEvent.started() = _Started;
+abstract class CreateTodoEvent extends Equatable {
+  const CreateTodoEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CreateTodoInitializationRequested extends CreateTodoEvent {
+  const CreateTodoInitializationRequested();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CreateTodo extends CreateTodoEvent {
+  const CreateTodo();
+
+  @override
+  List<Object> get props => [];
 }

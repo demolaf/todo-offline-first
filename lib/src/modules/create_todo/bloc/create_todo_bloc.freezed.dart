@@ -15,185 +15,54 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$CreateTodoEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $CreateTodoEventCopyWith<$Res> {
-  factory $CreateTodoEventCopyWith(
-          CreateTodoEvent value, $Res Function(CreateTodoEvent) then) =
-      _$CreateTodoEventCopyWithImpl<$Res, CreateTodoEvent>;
-}
-
-/// @nodoc
-class _$CreateTodoEventCopyWithImpl<$Res, $Val extends CreateTodoEvent>
-    implements $CreateTodoEventCopyWith<$Res> {
-  _$CreateTodoEventCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-}
-
-/// @nodoc
-abstract class _$$_StartedCopyWith<$Res> {
-  factory _$$_StartedCopyWith(
-          _$_Started value, $Res Function(_$_Started) then) =
-      __$$_StartedCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_StartedCopyWithImpl<$Res>
-    extends _$CreateTodoEventCopyWithImpl<$Res, _$_Started>
-    implements _$$_StartedCopyWith<$Res> {
-  __$$_StartedCopyWithImpl(_$_Started _value, $Res Function(_$_Started) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_Started implements _Started {
-  const _$_Started();
-
-  @override
-  String toString() {
-    return 'CreateTodoEvent.started()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Started);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-  }) {
-    return started();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-  }) {
-    return started?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-  }) {
-    return started(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-  }) {
-    return started?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Started implements CreateTodoEvent {
-  const factory _Started() = _$_Started;
-}
-
-/// @nodoc
 mixin _$CreateTodoState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function() ready,
+    required TResult Function() creatingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function()? ready,
+    TResult? Function()? creatingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function()? ready,
+    TResult Function()? creatingTodo,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
+    required TResult Function(CreateTodoStateLoading value) loading,
+    required TResult Function(CreateTodoStateReady value) ready,
+    required TResult Function(CreatingTodo value) creatingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
+    TResult? Function(CreateTodoStateLoading value)? loading,
+    TResult? Function(CreateTodoStateReady value)? ready,
+    TResult? Function(CreatingTodo value)? creatingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
+    TResult Function(CreateTodoStateLoading value)? loading,
+    TResult Function(CreateTodoStateReady value)? ready,
+    TResult Function(CreatingTodo value)? creatingTodo,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -255,6 +124,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function() ready,
+    required TResult Function() creatingTodo,
   }) {
     return initial();
   }
@@ -263,6 +135,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function()? ready,
+    TResult? Function()? creatingTodo,
   }) {
     return initial?.call();
   }
@@ -271,6 +146,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function()? ready,
+    TResult Function()? creatingTodo,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -283,6 +161,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
+    required TResult Function(CreateTodoStateLoading value) loading,
+    required TResult Function(CreateTodoStateReady value) ready,
+    required TResult Function(CreatingTodo value) creatingTodo,
   }) {
     return initial(this);
   }
@@ -291,6 +172,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
+    TResult? Function(CreateTodoStateLoading value)? loading,
+    TResult? Function(CreateTodoStateReady value)? ready,
+    TResult? Function(CreatingTodo value)? creatingTodo,
   }) {
     return initial?.call(this);
   }
@@ -299,6 +183,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
+    TResult Function(CreateTodoStateLoading value)? loading,
+    TResult Function(CreateTodoStateReady value)? ready,
+    TResult Function(CreatingTodo value)? creatingTodo,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -310,4 +197,346 @@ class _$_Initial implements _Initial {
 
 abstract class _Initial implements CreateTodoState {
   const factory _Initial() = _$_Initial;
+}
+
+/// @nodoc
+abstract class _$$CreateTodoStateLoadingCopyWith<$Res> {
+  factory _$$CreateTodoStateLoadingCopyWith(_$CreateTodoStateLoading value,
+          $Res Function(_$CreateTodoStateLoading) then) =
+      __$$CreateTodoStateLoadingCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$CreateTodoStateLoadingCopyWithImpl<$Res>
+    extends _$CreateTodoStateCopyWithImpl<$Res, _$CreateTodoStateLoading>
+    implements _$$CreateTodoStateLoadingCopyWith<$Res> {
+  __$$CreateTodoStateLoadingCopyWithImpl(_$CreateTodoStateLoading _value,
+      $Res Function(_$CreateTodoStateLoading) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$CreateTodoStateLoading implements CreateTodoStateLoading {
+  const _$CreateTodoStateLoading();
+
+  @override
+  String toString() {
+    return 'CreateTodoState.loading()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$CreateTodoStateLoading);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function() ready,
+    required TResult Function() creatingTodo,
+  }) {
+    return loading();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function()? ready,
+    TResult? Function()? creatingTodo,
+  }) {
+    return loading?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function()? ready,
+    TResult Function()? creatingTodo,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(CreateTodoStateLoading value) loading,
+    required TResult Function(CreateTodoStateReady value) ready,
+    required TResult Function(CreatingTodo value) creatingTodo,
+  }) {
+    return loading(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(CreateTodoStateLoading value)? loading,
+    TResult? Function(CreateTodoStateReady value)? ready,
+    TResult? Function(CreatingTodo value)? creatingTodo,
+  }) {
+    return loading?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(CreateTodoStateLoading value)? loading,
+    TResult Function(CreateTodoStateReady value)? ready,
+    TResult Function(CreatingTodo value)? creatingTodo,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CreateTodoStateLoading implements CreateTodoState {
+  const factory CreateTodoStateLoading() = _$CreateTodoStateLoading;
+}
+
+/// @nodoc
+abstract class _$$CreateTodoStateReadyCopyWith<$Res> {
+  factory _$$CreateTodoStateReadyCopyWith(_$CreateTodoStateReady value,
+          $Res Function(_$CreateTodoStateReady) then) =
+      __$$CreateTodoStateReadyCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$CreateTodoStateReadyCopyWithImpl<$Res>
+    extends _$CreateTodoStateCopyWithImpl<$Res, _$CreateTodoStateReady>
+    implements _$$CreateTodoStateReadyCopyWith<$Res> {
+  __$$CreateTodoStateReadyCopyWithImpl(_$CreateTodoStateReady _value,
+      $Res Function(_$CreateTodoStateReady) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$CreateTodoStateReady implements CreateTodoStateReady {
+  const _$CreateTodoStateReady();
+
+  @override
+  String toString() {
+    return 'CreateTodoState.ready()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$CreateTodoStateReady);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function() ready,
+    required TResult Function() creatingTodo,
+  }) {
+    return ready();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function()? ready,
+    TResult? Function()? creatingTodo,
+  }) {
+    return ready?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function()? ready,
+    TResult Function()? creatingTodo,
+    required TResult orElse(),
+  }) {
+    if (ready != null) {
+      return ready();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(CreateTodoStateLoading value) loading,
+    required TResult Function(CreateTodoStateReady value) ready,
+    required TResult Function(CreatingTodo value) creatingTodo,
+  }) {
+    return ready(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(CreateTodoStateLoading value)? loading,
+    TResult? Function(CreateTodoStateReady value)? ready,
+    TResult? Function(CreatingTodo value)? creatingTodo,
+  }) {
+    return ready?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(CreateTodoStateLoading value)? loading,
+    TResult Function(CreateTodoStateReady value)? ready,
+    TResult Function(CreatingTodo value)? creatingTodo,
+    required TResult orElse(),
+  }) {
+    if (ready != null) {
+      return ready(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CreateTodoStateReady implements CreateTodoState {
+  const factory CreateTodoStateReady() = _$CreateTodoStateReady;
+}
+
+/// @nodoc
+abstract class _$$CreatingTodoCopyWith<$Res> {
+  factory _$$CreatingTodoCopyWith(
+          _$CreatingTodo value, $Res Function(_$CreatingTodo) then) =
+      __$$CreatingTodoCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$CreatingTodoCopyWithImpl<$Res>
+    extends _$CreateTodoStateCopyWithImpl<$Res, _$CreatingTodo>
+    implements _$$CreatingTodoCopyWith<$Res> {
+  __$$CreatingTodoCopyWithImpl(
+      _$CreatingTodo _value, $Res Function(_$CreatingTodo) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$CreatingTodo implements CreatingTodo {
+  const _$CreatingTodo();
+
+  @override
+  String toString() {
+    return 'CreateTodoState.creatingTodo()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$CreatingTodo);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function() ready,
+    required TResult Function() creatingTodo,
+  }) {
+    return creatingTodo();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function()? ready,
+    TResult? Function()? creatingTodo,
+  }) {
+    return creatingTodo?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function()? ready,
+    TResult Function()? creatingTodo,
+    required TResult orElse(),
+  }) {
+    if (creatingTodo != null) {
+      return creatingTodo();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(CreateTodoStateLoading value) loading,
+    required TResult Function(CreateTodoStateReady value) ready,
+    required TResult Function(CreatingTodo value) creatingTodo,
+  }) {
+    return creatingTodo(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(CreateTodoStateLoading value)? loading,
+    TResult? Function(CreateTodoStateReady value)? ready,
+    TResult? Function(CreatingTodo value)? creatingTodo,
+  }) {
+    return creatingTodo?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(CreateTodoStateLoading value)? loading,
+    TResult Function(CreateTodoStateReady value)? ready,
+    TResult Function(CreatingTodo value)? creatingTodo,
+    required TResult orElse(),
+  }) {
+    if (creatingTodo != null) {
+      return creatingTodo(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CreatingTodo implements CreateTodoState {
+  const factory CreatingTodo() = _$CreatingTodo;
 }
