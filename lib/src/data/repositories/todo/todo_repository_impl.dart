@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:todo_bloc/src/data/api/todo_api.dart';
 import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
@@ -20,8 +21,7 @@ class TodoRepositoryImpl implements TodoRepository {
   }
 
   @override
-  Future<void> createTodo(
-    SourceType sourceType, {
+  Future<void> createTodo({
     required String id,
     required String color,
     required DateTime time,
@@ -30,7 +30,6 @@ class TodoRepositoryImpl implements TodoRepository {
     required String title,
   }) async {
     await _todoApi.createTodo(
-      sourceType,
       id: id,
       color: color,
       time: time,
@@ -41,8 +40,21 @@ class TodoRepositoryImpl implements TodoRepository {
   }
 
   @override
-  Stream<List<TodoDTO>> getAllTodos() {
-    return _todoApi.getAllTodos();
+  Stream<List<TodoDTO>> getAllTodos(SourceType sourceType) {
+    return _todoApi.getAllTodos(sourceType);
+  }
+
+  @override
+  bool checkIfNeedToSync() {
+    final results = _todoApi.fetchUnSyncedTodos();
+    developer.log('Results from synced query $results');
+    return results.isNotEmpty;
+  }
+
+  @override
+  Future<void> syncTodosWithRemote() async {
+    await _todoApi.pushUnSyncedTodosToRemote();
+    await _todoApi.cacheRefresh();
   }
 
   @override

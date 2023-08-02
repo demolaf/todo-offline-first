@@ -4,8 +4,7 @@ import 'package:todo_bloc/src/data/repositories/todo/todo_repository_impl.dart';
 abstract class TodoRepository {
   String getGeneratedTodoId();
 
-  Future<void> createTodo(
-    SourceType sourceType, {
+  Future<void> createTodo({
     required String id,
     required String color,
     required DateTime time,
@@ -16,5 +15,9 @@ abstract class TodoRepository {
 
   Future<void> getTodo();
 
-  Stream<List<TodoDTO>> getAllTodos();
+  Stream<List<TodoDTO>> getAllTodos(SourceType sourceType);
+
+  Future<void> syncTodosWithRemote();
+
+  bool checkIfNeedToSync();
 }
