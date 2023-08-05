@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_bloc/src/core/enums/enums.dart';
 import 'package:todo_bloc/src/core/shared/shared.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
-import 'package:todo_bloc/src/data/repositories/todo/todo_repository_impl.dart';
 import 'package:todo_bloc/src/modules/connection_checker/bloc/connection_checker_bloc.dart';
 import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
 import 'package:todo_bloc/src/modules/home/bloc/home_bloc.dart';
+import 'package:todo_bloc/src/modules/home/view/pages/device_info_view.dart';
+import 'package:todo_bloc/src/modules/home/view/pages/queues_view.dart';
 import 'package:todo_bloc/src/modules/home/view/widgets/todays_todos_list_view.dart';
+import 'package:todo_bloc/src/modules/todo_sync/cubit/todo_sync_cubit.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -19,21 +21,8 @@ class HomeView extends StatefulWidget {
         return BlocProvider(
           create: (context) => HomeBloc(
             todoRepository: context.read<TodoRepository>(),
-          ),
-          child: BlocListener<ConnectionCheckerBloc, ConnectionCheckerState>(
-            listener: (context, state) {
-              if (state is ConnectionCheckerStateReady) {
-                final sourceType =
-                    state.connected ? SourceType.remote : SourceType.local;
-                context.read<HomeBloc>().add(
-                      HomeInitializationRequested(
-                        sourceType: sourceType,
-                      ),
-                    );
-              }
-            },
-            child: const HomeView(),
-          ),
+          )..add(const HomeInitializationRequested()),
+          child: const HomeView(),
         );
       },
     );
@@ -85,21 +74,34 @@ class _HomeViewState extends State<HomeView> {
         // titleSpacing: 20,
         automaticallyImplyLeading: false,
         title: Text(
-          'Todos',
+          "To Do's",
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         centerTitle: false,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 24),
+            padding: const EdgeInsets.only(right: 24),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(
+                const Icon(
                   Icons.person,
                 ),
-                SizedBox(width: 24),
-                Icon(
+                const Icon(
                   Icons.settings_rounded,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.cloud),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(QueuesView.route(bloc: context.read<HomeBloc>()));
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.perm_device_info_rounded),
+                  onPressed: () {
+                    Navigator.of(context).push(DeviceInfoView.route());
+                  },
                 ),
               ],
             ),
@@ -109,6 +111,10 @@ class _HomeViewState extends State<HomeView> {
       body: BlocListener<ConnectionCheckerBloc, ConnectionCheckerState>(
         listener: (context, state) {
           if (state is ConnectionCheckerStateReady) {
+            context
+                .read<TodoSyncCubit>()
+                .synchronizingTodos(connected: state.connected);
+
             if (state.connected) {
               showSnackBar(
                 icon: const Icon(
@@ -125,6 +131,8 @@ class _HomeViewState extends State<HomeView> {
           }
         },
         child: BlocBuilder<HomeBloc, HomeState>(
+          buildWhen: (previous, current) =>
+              previous != current && current is HomeStateReady,
           builder: (context, state) {
             if (state is! HomeStateReady) {
               return const Center(
@@ -240,9 +248,7 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            CreateTodoView.route(todoActionType: TodoActionType.create),
-          );
+          Navigator.of(context).push(CreateTodoView.route());
         },
         child: const Icon(
           Icons.add,

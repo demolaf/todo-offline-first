@@ -9,6 +9,8 @@ environment:
 dependencies:
   bloc: ^8.1.2
   cloud_firestore: ^4.8.4
+  collection: ^1.17.1
+  device_info_plus: ^9.0.3
   equatable: ^2.0.5
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0

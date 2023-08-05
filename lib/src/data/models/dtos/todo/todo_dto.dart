@@ -1,9 +1,23 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:realm/realm.dart';
+import 'package:todo_bloc/src/data/models/domains/todo.dart';
 
 part 'todo_dto.g.dart';
 
 extension TodoDTOJsonParser on TodoDTO {
+  Todo toPlainObject() {
+    return Todo(
+      id: id,
+      color: color,
+      time: time,
+      priority: priority,
+      description: description,
+      title: title,
+      synced: synced,
+      completed: completed,
+    );
+  }
+
   static TodoDTO _toRealmObject(_TodoDTO todo) {
     return TodoDTO(
       todo.id,

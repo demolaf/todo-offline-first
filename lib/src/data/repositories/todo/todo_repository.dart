@@ -1,8 +1,10 @@
-import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
-import 'package:todo_bloc/src/data/repositories/todo/todo_repository_impl.dart';
+import 'package:realm/realm.dart';
+import 'package:todo_bloc/src/data/models/domains/todo.dart';
 
 abstract class TodoRepository {
   String getGeneratedTodoId();
+
+  bool checkEmptyTodosInLocal();
 
   Future<void> createTodo({
     required String id,
@@ -13,11 +15,11 @@ abstract class TodoRepository {
     required String title,
   });
 
-  Future<void> getTodo();
+  Todo getTodo(ObjectId id);
 
-  Stream<List<TodoDTO>> getAllTodos(SourceType sourceType);
+  void deleteTodo(ObjectId id);
 
-  Future<void> syncTodosWithRemote();
+  Stream<List<Todo>> getAllTodos();
 
-  bool checkIfNeedToSync();
+  Stream<RealmResultsChanges> listenForLocalChanges();
 }

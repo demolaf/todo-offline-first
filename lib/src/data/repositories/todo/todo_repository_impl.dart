@@ -1,12 +1,10 @@
-import 'dart:developer' as developer;
-import 'package:todo_bloc/src/data/api/todo_api.dart';
-import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
-import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
+// import 'dart:developer' as developer;
 
-enum SourceType {
-  local,
-  remote,
-}
+import 'package:realm/realm.dart';
+import 'package:todo_bloc/src/data/api/todo_api.dart';
+import 'package:todo_bloc/src/data/models/domains/todo.dart';
+import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
+import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 
 class TodoRepositoryImpl implements TodoRepository {
   TodoRepositoryImpl({
@@ -14,10 +12,14 @@ class TodoRepositoryImpl implements TodoRepository {
   }) : _todoApi = todoApi;
 
   final TodoApi _todoApi;
-
   @override
   String getGeneratedTodoId() {
     return _todoApi.generateTodoId();
+  }
+
+  @override
+  bool checkEmptyTodosInLocal() {
+    return _todoApi.checkEmptyTodosInLocal();
   }
 
   @override
@@ -40,26 +42,22 @@ class TodoRepositoryImpl implements TodoRepository {
   }
 
   @override
-  Stream<List<TodoDTO>> getAllTodos(SourceType sourceType) {
-    return _todoApi.getAllTodos(sourceType);
+  Stream<RealmResultsChanges> listenForLocalChanges() {
+    return _todoApi.listenForChangesInLocal();
   }
 
   @override
-  bool checkIfNeedToSync() {
-    final results = _todoApi.fetchUnSyncedTodos();
-    developer.log('Results from synced query $results');
-    return results.isNotEmpty;
+  Stream<List<Todo>> getAllTodos() => _todoApi
+      .fetchAllTodos()
+      .map((event) => event.map((e) => e.toPlainObject()).toList());
+
+  @override
+  Todo getTodo(ObjectId id) {
+    return _todoApi.getTodo(id).toPlainObject();
   }
 
   @override
-  Future<void> syncTodosWithRemote() async {
-    await _todoApi.pushUnSyncedTodosToRemote();
-    await _todoApi.cacheRefresh();
-  }
-
-  @override
-  Future<void> getTodo() {
-    // TODO(demolaf): implement getTodo
-    throw UnimplementedError();
+  void deleteTodo(ObjectId id) {
+    _todoApi.deleteTodo(id);
   }
 }

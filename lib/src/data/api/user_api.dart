@@ -2,8 +2,8 @@
 import 'dart:developer' as developer;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
-import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
-import 'package:todo_bloc/src/data/models/user/user_dto.dart';
+import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
+import 'package:todo_bloc/src/data/models/dtos/user/user_dto.dart';
 
 class UserApi {
   UserApi({

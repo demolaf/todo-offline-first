@@ -1,4 +1,5 @@
 // ignore_for_file: cast_nullable_to_non_nullable
+// ignore_for_file: avoid_positional_boolean_parameters
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'user_dto.dart';

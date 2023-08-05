@@ -1,6 +1,5 @@
 // ignore_for_file: unused_field
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -36,8 +35,6 @@ class ConnectionCheckerBloc
   ) async {
     emit(const ConnectionCheckerState.loading());
 
-    await synchronizingTodos();
-
     try {
       await emit.forEach(
         _connectionChecker.getInternetStatus(),
@@ -53,25 +50,5 @@ class ConnectionCheckerBloc
     } catch (e) {
       emit(ConnectionCheckerState.error(message: e.toString()));
     }
-  }
-
-  Future<bool> synchronizingTodos() async {
-    var isTimerRunning = false;
-    stream.listen((event) {
-      if (event is ConnectionCheckerStateReady) {
-        developer.log('initiating timer');
-        final _ = Timer.periodic(const Duration(seconds: 30), (timer) async {
-          final needToSync = _todoRepository.checkIfNeedToSync();
-          developer.log('checking if sync needed $needToSync');
-          isTimerRunning = true;
-          if (needToSync && event.connected) {
-            developer.log('start synchronizing todos');
-            await _todoRepository.syncTodosWithRemote();
-            developer.log('done synchronizing todos');
-          }
-        });
-      }
-    });
-    return isTimerRunning;
   }
 }

@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
-import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
-import 'package:todo_bloc/src/data/repositories/todo/todo_repository_impl.dart';
+import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
 
 class TodoApi {
   TodoApi({
     required LocalStorage localStorage,
-  })  : _localStorage = localStorage,
-        _todosRef = FirebaseFirestore.instance.collection('todos');
+  }) : _localStorage = localStorage;
 
   final LocalStorage _localStorage;
-  final CollectionReference _todosRef;
 
   // TODO(demolaf): when editing a todo we have set the synced value to false
 
@@ -21,6 +17,10 @@ class TodoApi {
   /// the one new object at a time from the create_todo user interface
   String generateTodoId() {
     return ObjectId().hexString;
+  }
+
+  TodoDTO getTodo(ObjectId id) {
+    return _localStorage.read<TodoDTO>(r'id == $0', [id]).first;
   }
 
   /// Create a todo_object and store in local
@@ -49,73 +49,45 @@ class TodoApi {
     }
   }
 
-  /// Get all todos from sources - local or remote
-  Stream<List<TodoDTO>> getAllTodos(SourceType sourceType) {
-    try {
-      switch (sourceType) {
-        case SourceType.local:
-          return _localStorage
-              .readAllAsStream<TodoDTO>()
-              .asyncMap((event) => event.results.toList());
-        case SourceType.remote:
-          return _todosRef.snapshots().asyncMap(
-                (event) => event.docs
-                    .map(
-                      (e) => TodoDTOJsonParser.fromJson(
-                        e.data()! as Map<String, dynamic>,
-                      ),
-                    )
-                    .toList(),
-              );
-      }
-    } catch (e) {
-      developer.log(e.toString());
-      rethrow;
-    }
+  void deleteTodo(ObjectId id) {
+    final todo = getTodo(id);
+    _localStorage.delete(todo);
   }
 
-  /// Fetch un-synced todos from local
-  List<TodoDTO> fetchUnSyncedTodos() {
-    return _localStorage.read<TodoDTO>(r'synced == $0', [false]).toList();
+  Stream<RealmResultsChanges> listenForChangesInLocal() {
+    return _localStorage.readAllAsStream<TodoDTO>();
   }
 
-  /// Push un-synced todos to remote
-  Future<void> pushUnSyncedTodosToRemote() async {
-    try {
-      final todos = fetchUnSyncedTodos();
-      // check internet connection
-      for (final todo in todos) {
-        final docRef = _todosRef.doc(todo.id.hexString);
-
-        // Set to synced in firestore, not sure if it's needed
-        await docRef.set(todo.copyWith(synced: true).toJson());
-
-        // Update the todo_object in local
-        await _localStorage.update<TodoDTO>(() {
-          // Set to synced to avoid syncing again
-          todo.synced = true;
-        });
-      }
-    } catch (e) {
-      developer.log(e.toString());
-      rethrow;
-    }
+  /// Handles fetching todos from local or cloud
+  Stream<List<TodoDTO>> fetchAllTodos() {
+    return _fetchTodosFromLocal();
   }
 
-  /// Removes all data from the local after unsynced todos have been synced
-  /// Then fetches all the todos from firestore and stores in local
-  /// Which ensures an up-to-date and refreshed data set
-  Future<void> cacheRefresh() async {
-    // Check if there's a connection first
-    try {
-      await _localStorage.deleteAll<TodoDTO>();
+  bool checkEmptyTodosInLocal() => _localStorage.readAll<TodoDTO>().isEmpty;
 
-      final todos = await getAllTodos(SourceType.remote).first;
+  /// Fetch todos from cloud db
+  // Stream<List<TodoDTO>> _fetchTodosFromRemote() {
+  //   final user = _localStorage.readAll<UserDTO>().first;
+  //
+  //   return _todosRef.doc(user.uid).snapshots().asyncMap((event) {
+  //     final todoResponse = event.data() as Map<String, dynamic>?;
+  //
+  //     if (todoResponse != null) {
+  //       final todos = todoResponse['todos'] as List<dynamic>;
+  //
+  //       return todos
+  //           .map(
+  //             (e) => TodoDTOJsonParser.fromJson(e as Map<String, dynamic>),
+  //           )
+  //           .toList();
+  //     }
+  //
+  //     return [];
+  //   });
+  // }
 
-      await _localStorage.addAll(todos);
-    } catch (e) {
-      developer.log(e.toString());
-      rethrow;
-    }
-  }
+  /// Fetch todos from local db
+  Stream<List<TodoDTO>> _fetchTodosFromLocal() => _localStorage
+      .readAllAsStream<TodoDTO>()
+      .asyncMap((event) => event.results.toList());
 }

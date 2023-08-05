@@ -3,26 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_bloc/src/core/enums/enums.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
+import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
 import 'package:todo_bloc/src/modules/connection_checker/bloc/connection_checker_bloc.dart';
 import 'package:todo_bloc/src/modules/create_todo/bloc/create_todo_bloc.dart';
 
 class CreateTodoView extends StatefulWidget {
-  const CreateTodoView({required this.todoActionType, super.key});
+  const CreateTodoView({super.key});
 
-  static Route<CreateTodoView> route({required TodoActionType todoActionType}) {
+  static Route<CreateTodoView> route() {
     return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
           create: (context) => CreateTodoBloc(
+            todoSyncRepository: context.read<TodoSyncRepository>(),
             todoRepository: context.read<TodoRepository>(),
           ),
-          child: CreateTodoView(todoActionType: todoActionType),
+          child: const CreateTodoView(),
         );
       },
     );
   }
-
-  final TodoActionType todoActionType;
 
   @override
   State<CreateTodoView> createState() => _CreateTodoViewState();
@@ -65,20 +65,26 @@ class _CreateTodoViewState extends State<CreateTodoView> {
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: BackButton(
+            onPressed: () {
+              if ((titleEditingController?.text.isNotEmpty ?? false) ||
+                  (descriptionEditingController?.text.isNotEmpty ?? false)) {
+                context.read<CreateTodoBloc>().add(
+                      CreateTodo(
+                        title: titleEditingController?.text ?? '',
+                        description: descriptionEditingController?.text ?? '',
+                        color: Colors.purple.hex,
+                        priority: TodoPriority.high,
+                        time: DateTime.now(),
+                      ),
+                    );
+              }
+
+              Navigator.of(context).pop();
+            },
+          ),
           // TODO(demolaf): replace with enums
-          title: Text('${widget.todoActionType.name.capitalize} Todo'),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.only(right: 24),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.delete,
-                  ),
-                ],
-              ),
-            ),
-          ],
+          title: const Text('Create Todo'),
         ),
         body: Padding(
           padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
@@ -88,17 +94,6 @@ class _CreateTodoViewState extends State<CreateTodoView> {
             children: [
               Form(
                 key: _formKey,
-                onChanged: () {
-                  context.read<CreateTodoBloc>().add(
-                        CreateTodo(
-                          title: titleEditingController?.text ?? '',
-                          description: descriptionEditingController?.text ?? '',
-                          color: Colors.purple.hex,
-                          priority: TodoPriority.high,
-                          time: DateTime.now(),
-                        ),
-                      );
-                },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -247,24 +242,24 @@ class _CreateTodoViewState extends State<CreateTodoView> {
     );
   }
 
-  // void _showDatePicker(BuildContext context) {
-  //   showModalBottomSheet<Widget>(
-  //     context: context,
-  //     builder: (_) {
-  //       return SizedBox(
-  //         height: 300,
-  //         child: CupertinoDatePicker(
-  //           initialDateTime: DateTime.now(),
-  //           onDateTimeChanged: (val) {
-  //             setState(() {
-  //               selectedDateTime = val;
-  //             });
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+// void _showDatePicker(BuildContext context) {
+//   showModalBottomSheet<Widget>(
+//     context: context,
+//     builder: (_) {
+//       return SizedBox(
+//         height: 300,
+//         child: CupertinoDatePicker(
+//           initialDateTime: DateTime.now(),
+//           onDateTimeChanged: (val) {
+//             setState(() {
+//               selectedDateTime = val;
+//             });
+//           },
+//         ),
+//       );
+//     },
+//   );
+// }
 }
 
 // Column(
