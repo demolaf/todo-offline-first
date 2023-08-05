@@ -8,7 +8,9 @@ environment:
 
 dependencies:
   bloc: ^8.1.2
+  cloud_firestore: ^4.8.4
   equatable: ^2.0.5
+  firebase_auth: ^4.7.2
   firebase_core: ^2.15.0
   flex_color_scheme: ^7.2.0
   flutter:
@@ -18,8 +20,11 @@ dependencies:
     sdk: flutter
   freezed: ^2.4.1
   freezed_annotation: ^2.4.1
+  google_sign_in: ^6.1.4
   internet_connection_checker_plus: ^2.0.0
   intl: ^0.18.0
+  json_annotation: ^4.8.1
+  moment_dart: ^0.18.1
   realm: ^1.3.0
 
 dev_dependencies:
@@ -27,6 +32,7 @@ dev_dependencies:
   build_runner: ^2.3.3
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.7.1
   mocktail: ^0.3.0
   very_good_analysis: ^5.0.0
 

@@ -1,12 +1,18 @@
 part of 'create_todo_bloc.dart';
 
+enum ProcessingState {
+  processing,
+  success,
+  failure,
+}
+
 @freezed
 class CreateTodoState with _$CreateTodoState {
-  const factory CreateTodoState.initial() = _Initial;
+  const factory CreateTodoState.loading() = Loading;
 
-  const factory CreateTodoState.loading() = CreateTodoStateLoading;
+  const factory CreateTodoState.ready() = Ready;
 
-  const factory CreateTodoState.ready() = CreateTodoStateReady;
-
-  const factory CreateTodoState.creatingTodo() = CreatingTodo;
+  const factory CreateTodoState.creatingTodo({
+    required ProcessingState processingState,
+  }) = CreatingTodo;
 }

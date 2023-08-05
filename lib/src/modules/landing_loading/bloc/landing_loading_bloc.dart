@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:todo_bloc/src/data/repositories/auth/auth_repository.dart';
 
 part 'landing_loading_bloc.freezed.dart';
 
@@ -10,9 +11,14 @@ part 'landing_loading_state.dart';
 
 class LandingLoadingBloc
     extends Bloc<LandingLoadingEvent, LandingLoadingState> {
-  LandingLoadingBloc() : super(const LandingLoadingState.initial()) {
+  LandingLoadingBloc({
+    required AuthRepository authRepository,
+  })  : _authRepository = authRepository,
+        super(const LandingLoadingState.initial()) {
     on<InitializationRequested>(_onInitializationRequested);
   }
+
+  final AuthRepository _authRepository;
 
   Future<void> _onInitializationRequested(
     InitializationRequested event,
@@ -20,6 +26,12 @@ class LandingLoadingBloc
   ) async {
     emit(const LandingLoadingState.loading());
 
-    emit(const LandingLoadingState.navigateToHome());
+    final loggedIn = await _authRepository.checkIfUserAuthenticated();
+    if (loggedIn) {
+      emit(const LandingLoadingState.navigateToHome());
+      return;
+    }
+
+    emit(const LandingLoadingState.navigateToSignIn());
   }
 }

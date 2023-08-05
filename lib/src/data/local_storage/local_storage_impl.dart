@@ -24,11 +24,9 @@ class LocalStorageImpl implements LocalStorage {
   }
 
   @override
-  Future<void> update<T>(T object) async {
+  Future<void> update<T>(void Function() callback) async {
     try {
-      await _realm.writeAsync(() {
-        _realm.add(object as RealmObject, update: true);
-      });
+      await _realm.writeAsync(callback);
     } catch (e) {
       developer.log('Error updating object');
       rethrow;
@@ -48,6 +46,18 @@ class LocalStorageImpl implements LocalStorage {
   }
 
   @override
+  Future<void> addAll<T extends RealmObject>(Iterable<T> items) async {
+    try {
+      await _realm.writeAsync(() {
+        _realm.addAll<T>(items);
+      });
+    } catch (e) {
+      developer.log('Error adding all objects');
+      rethrow;
+    }
+  }
+
+  @override
   T? findObjectById<T extends RealmObject>(ObjectId id) {
     try {
       return _realm.find<T>(id);
@@ -58,9 +68,12 @@ class LocalStorageImpl implements LocalStorage {
   }
 
   @override
-  RealmResults<T> read<T extends RealmObject>({required String query}) {
+  RealmResults<T> read<T extends RealmObject>(
+    String query, [
+    List<Object?> args = const [],
+  ]) {
     try {
-      return _realm.query<T>(query);
+      return _realm.query<T>(query, args);
     } catch (e) {
       developer.log('Error fetching object');
       rethrow;
@@ -78,11 +91,12 @@ class LocalStorageImpl implements LocalStorage {
   }
 
   @override
-  Stream<RealmResultsChanges<T>> readAsStream<T extends RealmObject>({
-    required String query,
-  }) {
+  Stream<RealmResultsChanges<T>> readAsStream<T extends RealmObject>(
+    String query, [
+    List<Object?> args = const [],
+  ]) {
     try {
-      return _realm.query<T>(query).changes;
+      return _realm.query<T>(query, args).changes;
     } catch (e) {
       developer.log('Error fetching object as stream');
       rethrow;
@@ -95,6 +109,18 @@ class LocalStorageImpl implements LocalStorage {
       return _realm.all<T>().changes;
     } catch (e) {
       developer.log('Error fetching all objects as stream');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteAll<T extends RealmObject>() async {
+    try {
+      await _realm.writeAsync(() {
+        _realm.deleteAll<T>();
+      });
+    } catch (e) {
+      developer.log('Error deleting all objects as stream');
       rethrow;
     }
   }

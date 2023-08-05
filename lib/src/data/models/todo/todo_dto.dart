@@ -1,31 +1,52 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:realm/realm.dart';
 
 part 'todo_dto.g.dart';
 
-extension ParseTodoDTOFromAndToJson on TodoDTO {
-  TodoDTO fromJson(Map<String, dynamic> json) {
+extension TodoDTOJsonParser on TodoDTO {
+  static TodoDTO _toRealmObject(_TodoDTO todo) {
     return TodoDTO(
-      id,
-      json['color'] as String,
-      json['time'] as String,
-      json['priority'] as String,
-      json['description'] as String,
-      json['title'] as String,
+      todo.id,
+      todo.color,
+      todo.time,
+      todo.priority,
+      todo.description,
+      todo.title,
+      todo.synced,
+      todo.completed,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'color': color,
-      'time': time,
-      'priority': priority,
-      'description': description,
-      'title': title,
-    };
+  static TodoDTO fromJson(Map<String, dynamic> json) =>
+      _toRealmObject(_$TodoDTOFromJson(json));
+
+  Map<String, dynamic> toJson() => _$TodoDTOToJson(this);
+
+  TodoDTO copyWith({
+    String? color,
+    String? time,
+    String? priority,
+    String? description,
+    String? title,
+    bool? synced,
+    bool? completed,
+  }) {
+    return TodoDTO(
+      id,
+      color ?? this.color,
+      time ?? this.time,
+      priority ?? this.priority,
+      description ?? this.description,
+      title ?? this.title,
+      synced ?? this.synced,
+      completed ?? this.completed,
+    );
   }
 }
 
 @RealmModel()
+@JsonSerializable()
+@ObjectIdConverter()
 class _TodoDTO {
   @PrimaryKey()
   late ObjectId id;
@@ -34,10 +55,25 @@ class _TodoDTO {
   late final String priority;
   late final String description;
   late final String title;
+  late bool synced;
+  late bool completed;
 
   @override
   String toString() {
-    return '_TodoDTO{id: $id, color: $color, time: $time, priority: $priority,'
-        ' description: $description, title: $title}';
+    return '_TodoDTO{id: $id, color: $color, time: $time, '
+        'priority: $priority, description: $description, title: '
+        '$title, synced: $synced, completed: $completed}';
   }
+}
+
+class ObjectIdConverter implements JsonConverter<ObjectId, String> {
+  const ObjectIdConverter();
+
+  @override
+  ObjectId fromJson(String json) {
+    return ObjectId.fromHexString(json);
+  }
+
+  @override
+  String toJson(ObjectId id) => id.hexString;
 }

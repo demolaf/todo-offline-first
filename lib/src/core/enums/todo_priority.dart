@@ -21,3 +21,20 @@ extension ParseTodoPriorityToColor on TodoPriority {
     }
   }
 }
+
+extension ParseStringToTodoPriority on String {
+  TodoPriority toTodoPriority() {
+    switch (this) {
+      case 'high':
+        return TodoPriority.high;
+      case 'medium':
+        return TodoPriority.medium;
+      case 'low':
+        return TodoPriority.low;
+      case 'normal':
+        return TodoPriority.normal;
+      default:
+        return TodoPriority.normal;
+    }
+  }
+}

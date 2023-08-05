@@ -1,11 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/core/constants/theme.dart';
 import 'package:todo_bloc/src/data/api/todo_api.dart';
+import 'package:todo_bloc/src/data/api/user_api.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage_impl.dart';
+import 'package:todo_bloc/src/data/repositories/auth/auth_repository.dart';
+import 'package:todo_bloc/src/data/repositories/auth/auth_repository_impl.dart';
 import 'package:todo_bloc/src/data/repositories/connection_checker/connection_checker.dart';
 import 'package:todo_bloc/src/data/repositories/connection_checker/connection_checker_impl.dart';
 import 'package:todo_bloc/src/data/repositories/settings/settings_repository.dart';
@@ -43,6 +48,13 @@ class App extends StatelessWidget {
         RepositoryProvider<SettingsRepository>(
           create: (context) => SettingsRepositoryImpl(),
         ),
+        RepositoryProvider<AuthRepository>(
+          create: (context) => AuthRepositoryImpl(
+            firebaseAuth: FirebaseAuth.instance,
+            googleSignIn: GoogleSignIn(),
+            userApi: UserApi(localStorage: context.read<LocalStorage>()),
+          ),
+        ),
         RepositoryProvider<TodoRepository>(
           create: (context) => TodoRepositoryImpl(
             todoApi: TodoApi(
@@ -59,6 +71,7 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => ConnectionCheckerBloc(
               connectionChecker: context.read<ConnectionChecker>(),
+              todoRepository: context.read<TodoRepository>(),
             )..add(const ConnectionCheckerInitializationRequested()),
           ),
         ],
