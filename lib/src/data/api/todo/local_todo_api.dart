@@ -22,17 +22,7 @@ class LocalTodoApi extends TodoApi {
   @override
   Future<void> createTodo(TodoDTO todo) async {
     try {
-      final newTodo = TodoDTO(
-        todo.id,
-        todo.color,
-        todo.time,
-        todo.priority,
-        todo.description,
-        todo.title,
-        todo.synced,
-        todo.completed,
-      );
-      await _localStorage.create(newTodo);
+      await _localStorage.create(todo);
     } catch (e) {
       developer.log(e.toString());
     }
@@ -49,7 +39,7 @@ class LocalTodoApi extends TodoApi {
     final todo = await getTodo(id);
 
     if (todo != null) {
-      await _localStorage.delete(todo);
+      await _localStorage.delete<TodoDTO>(todo);
     }
   }
 
