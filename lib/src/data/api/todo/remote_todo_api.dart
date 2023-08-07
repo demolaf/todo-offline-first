@@ -17,7 +17,9 @@ class RemoteTodoApi extends TodoApi {
   Future<void> createTodo(TodoDTO todo) async {
     final docRef = _getUserTodosDocRef();
 
-    final todosInRemote = await getTodos().first;
+    // TODO(demolaf): find out why this stream impl fails and the future works ?
+    // final todosInRemote = await getTodos().first;
+    final todosInRemote = await _getTodosAsFuture();
 
     final todosToSyncJson = <Map<String, dynamic>>[
       ...todosInRemote.map((e) => e.toJson()),
@@ -31,7 +33,7 @@ class RemoteTodoApi extends TodoApi {
   Future<void> deleteTodo(String id) async {
     final docRef = _getUserTodosDocRef();
 
-    final todosInRemote = await getTodos().first;
+    final todosInRemote = await _getTodosAsFuture();
 
     todosInRemote.removeWhere((element) => element.id.hexString == id);
 
@@ -44,7 +46,7 @@ class RemoteTodoApi extends TodoApi {
 
   @override
   Future<TodoDTO?> getTodo(String id) async {
-    final todos = await getTodos().first;
+    final todos = await _getTodosAsFuture();
 
     return todos.firstWhereOrNull(
       (element) => element.id.hexString == id,
@@ -73,6 +75,23 @@ class RemoteTodoApi extends TodoApi {
   Future<void> updateTodo(TodoDTO todo) {
     // TODO(demolaf): implement updateTodo
     throw UnimplementedError();
+  }
+
+  Future<List<TodoDTO>> _getTodosAsFuture() {
+    final docRef = _getUserTodosDocRef();
+
+    return docRef.get().then((value) {
+      final todosResponse = value.data() as Map<String, dynamic>?;
+
+      if (todosResponse != null) {
+        final todos = todosResponse['todos'] as List<dynamic>;
+        return todos
+            .map((e) => TodoDTOJsonParser.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+
+      return <TodoDTO>[];
+    });
   }
 
   DocumentReference<Object?> _getUserTodosDocRef() => _todosRef.doc(_userId);
