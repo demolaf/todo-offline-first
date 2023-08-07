@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,10 +7,12 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/core/constants/theme.dart';
 import 'package:todo_bloc/src/data/api/queue_api.dart';
-import 'package:todo_bloc/src/data/api/todo_api.dart';
+import 'package:todo_bloc/src/data/api/todo/local_todo_api.dart';
+import 'package:todo_bloc/src/data/api/todo/remote_todo_api.dart';
 import 'package:todo_bloc/src/data/api/user_api.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage_impl.dart';
+import 'package:todo_bloc/src/data/models/dtos/user/user_dto.dart';
 import 'package:todo_bloc/src/data/repositories/auth/auth_repository.dart';
 import 'package:todo_bloc/src/data/repositories/auth/auth_repository_impl.dart';
 import 'package:todo_bloc/src/data/repositories/connection_checker/connection_checker.dart';
@@ -61,7 +64,7 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<TodoRepository>(
           create: (context) => TodoRepositoryImpl(
-            todoApi: TodoApi(
+            todoApi: LocalTodoApi(
               localStorage: context.read<LocalStorage>(),
             ),
           ),
@@ -69,6 +72,15 @@ class App extends StatelessWidget {
         RepositoryProvider<TodoSyncRepository>(
           create: (context) => TodoSyncRepositoryImpl(
             queueApi: QueueApi(
+              localTodoApi: LocalTodoApi(
+                localStorage: context.read<LocalStorage>(),
+              ),
+              remoteTodoApi: RemoteTodoApi(
+                firestore: FirebaseFirestore.instance,
+                userId:
+                    context.read<LocalStorage>().readAll<UserDTO>().first.uid,
+              ),
+              firestore: FirebaseFirestore.instance,
               localStorage: context.read<LocalStorage>(),
             ),
           ),

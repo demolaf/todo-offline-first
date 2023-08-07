@@ -17,10 +17,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         super(const HomeState.initial()) {
     on<HomeInitializationRequested>((event, emit) async {
       await emit.onEach(
-        _todoRepository.listenForLocalChanges(),
+        _todoRepository.getAllTodos(),
         onData: (data) async {
-          final todos = await _todoRepository.getAllTodos().first;
-          emit(HomeState.ready(todos: todos));
+          emit(HomeState.ready(todos: data));
         },
       );
     });

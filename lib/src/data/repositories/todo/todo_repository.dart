@@ -1,10 +1,7 @@
-import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
 
 abstract class TodoRepository {
   String getGeneratedTodoId();
-
-  bool checkEmptyTodosInLocal();
 
   Future<void> createTodo({
     required String id,
@@ -15,11 +12,9 @@ abstract class TodoRepository {
     required String title,
   });
 
-  Todo getTodo(ObjectId id);
+  Future<Todo?> getTodo(String id);
 
-  void deleteTodo(ObjectId id);
+  void deleteTodo(String id);
 
   Stream<List<Todo>> getAllTodos();
-
-  Stream<RealmResultsChanges> listenForLocalChanges();
 }

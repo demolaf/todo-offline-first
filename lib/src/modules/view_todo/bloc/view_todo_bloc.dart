@@ -1,7 +1,7 @@
+import 'dart:developer' as developer;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
 import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
@@ -20,10 +20,14 @@ class ViewTodoBloc extends Bloc<EditTodoEvent, ViewTodoState> {
   })  : _todoRepository = todoRepository,
         _todoSyncRepository = todoSyncRepository,
         super(const ViewTodoState.loading()) {
-    on<FetchTodo>((event, emit) {
-      final todo = _todoRepository.getTodo(event.id);
+    on<FetchTodo>((event, emit) async {
+      try {
+        final todo = await _todoRepository.getTodo(event.id);
 
-      emit(ViewTodoState.ready(todo: todo));
+        emit(ViewTodoState.ready(todo: todo!));
+      } catch (e) {
+        developer.log(e.toString());
+      }
     });
 
     on<ModifyTodo>((event, emit) async {});
@@ -32,7 +36,7 @@ class ViewTodoBloc extends Bloc<EditTodoEvent, ViewTodoState> {
       _todoRepository.deleteTodo(event.id);
       await _todoSyncRepository.createDeleteQueueForTodo(
         operationType: QueueOperationType.delete,
-        id: event.id.hexString,
+        id: event.id,
       );
     });
   }

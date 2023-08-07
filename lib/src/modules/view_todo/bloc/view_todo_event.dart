@@ -10,7 +10,7 @@ abstract class EditTodoEvent extends Equatable {
 class FetchTodo extends EditTodoEvent {
   const FetchTodo({required this.id});
 
-  final ObjectId id;
+  final String id;
 
   @override
   List<Object> get props => [id];
@@ -19,7 +19,7 @@ class FetchTodo extends EditTodoEvent {
 class DeleteTodo extends EditTodoEvent {
   const DeleteTodo({required this.id});
 
-  final ObjectId id;
+  final String id;
 
   @override
   List<Object> get props => [id];

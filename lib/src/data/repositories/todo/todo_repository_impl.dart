@@ -1,7 +1,7 @@
 // import 'dart:developer' as developer;
 
 import 'package:realm/realm.dart';
-import 'package:todo_bloc/src/data/api/todo_api.dart';
+import 'package:todo_bloc/src/data/api/todo/todo_api.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
 import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
@@ -12,14 +12,12 @@ class TodoRepositoryImpl implements TodoRepository {
   }) : _todoApi = todoApi;
 
   final TodoApi _todoApi;
+
+  /// We use this to ensure that we only create and update
+  /// the one new object at a time from the create_todo user interface
   @override
   String getGeneratedTodoId() {
-    return _todoApi.generateTodoId();
-  }
-
-  @override
-  bool checkEmptyTodosInLocal() {
-    return _todoApi.checkEmptyTodosInLocal();
+    return ObjectId().hexString;
   }
 
   @override
@@ -32,32 +30,31 @@ class TodoRepositoryImpl implements TodoRepository {
     required String title,
   }) async {
     await _todoApi.createTodo(
-      id: id,
-      color: color,
-      time: time,
-      priority: priority,
-      description: description,
-      title: title,
+      TodoDTO(
+        ObjectId.fromHexString(id),
+        color,
+        time.toIso8601String(),
+        priority,
+        description,
+        title,
+        false,
+        false,
+      ),
     );
   }
 
   @override
-  Stream<RealmResultsChanges> listenForLocalChanges() {
-    return _todoApi.listenForChangesInLocal();
-  }
-
-  @override
   Stream<List<Todo>> getAllTodos() => _todoApi
-      .fetchAllTodos()
+      .getTodos()
       .map((event) => event.map((e) => e.toPlainObject()).toList());
 
   @override
-  Todo getTodo(ObjectId id) {
-    return _todoApi.getTodo(id).toPlainObject();
+  Future<Todo?> getTodo(String id) async {
+    return _todoApi.getTodo(id).then((value) => value?.toPlainObject());
   }
 
   @override
-  void deleteTodo(ObjectId id) {
+  void deleteTodo(String id) {
     _todoApi.deleteTodo(id);
   }
 }

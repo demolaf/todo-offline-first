@@ -1,4 +1,3 @@
-import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/core/global_imports.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
@@ -7,7 +6,7 @@ import 'package:todo_bloc/src/modules/view_todo/bloc/view_todo_bloc.dart';
 class ViewTodoView extends StatelessWidget {
   const ViewTodoView({required this.id, super.key});
 
-  static Route<ViewTodoView> route({required ObjectId id}) {
+  static Route<ViewTodoView> route({required String id}) {
     return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
@@ -21,7 +20,7 @@ class ViewTodoView extends StatelessWidget {
     );
   }
 
-  final ObjectId id;
+  final String id;
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ class TodoListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(ViewTodoView.route(id: todo.id));
+        Navigator.of(context).push(ViewTodoView.route(id: todo.id.hexString));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 24),
