@@ -32,10 +32,11 @@ dependencies:
 dev_dependencies:
   bloc_test: ^9.1.2
   build_runner: ^2.3.3
+  fake_cloud_firestore: ^2.4.1+1
   flutter_test:
     sdk: flutter
   json_serializable: ^6.7.1
-  mocktail: ^0.3.0
+  mocktail: ^1.0.0
   very_good_analysis: ^5.0.0
 
 flutter:
