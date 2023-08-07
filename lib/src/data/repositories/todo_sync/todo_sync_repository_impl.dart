@@ -1,20 +1,20 @@
-import 'package:todo_bloc/src/data/api/queue_api.dart';
+import 'package:todo_bloc/src/data/api/queue_service.dart';
 import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
 
 class TodoSyncRepositoryImpl implements TodoSyncRepository {
   TodoSyncRepositoryImpl({
-    required QueueApi queueApi,
-  }) : _queueApi = queueApi;
+    required QueueService queueService,
+  }) : _queueService = queueService;
 
-  final QueueApi _queueApi;
+  final QueueService _queueService;
 
   @override
-  bool needToPushSync() => _queueApi.checkIfNeedToPushSync();
+  bool needToPushSync() => _queueService.checkIfNeedToPushSync();
 
   @override
   void listenForPullSync() {
-    _queueApi.pullWhen();
+    _queueService.listenForChangesInQueuesDoc();
   }
 
   @override
@@ -22,19 +22,19 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     required QueueOperationType operationType,
     required String id,
   }) =>
-      _queueApi.storeQueueToSync(
+      _queueService.storeQueueToSync(
         operationType: QueueOperationType.create,
         todoId: id,
       );
 
   @override
   Future<void> syncTodosWithRemote() =>
-      _queueApi.pushUnSyncedQueuesAndTodosToRemote();
+      _queueService.pushUnSyncedQueuesAndTodosToRemote();
 
   @override
   Future<void> createDeleteQueueForTodo({
     required QueueOperationType operationType,
     required String id,
   }) =>
-      _queueApi.storeQueueToSync(operationType: operationType, todoId: id);
+      _queueService.storeQueueToSync(operationType: operationType, todoId: id);
 }
