@@ -62,6 +62,7 @@ class SignInView extends StatelessWidget {
                         if (isAuthenticating) {
                           return Center(
                             child: SizedBox(
+                              height: 24,
                               width: 24,
                               child: CircularProgressIndicator(
                                 color:

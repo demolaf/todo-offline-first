@@ -3,7 +3,9 @@ import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 abstract class QueueApi {
   Future<QueueDTO?> getQueue(String id);
 
-  Stream<List<QueueDTO>> getQueues();
+  Future<List<QueueDTO>> getQueues();
+
+  Stream<List<QueueDTO>> getQueuesAsStream();
 
   Future<void> createQueue(QueueDTO queue);
 

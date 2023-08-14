@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:collection/collection.dart';
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/data/api/queue/queue_api.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
@@ -36,19 +37,42 @@ class LocalQueueApi extends QueueApi {
   }
 
   @override
-  Stream<List<QueueDTO>> getQueues() {
+  Stream<List<QueueDTO>> getQueuesAsStream() {
     return _localStorage
         .readAllAsStream<QueueDTO>()
         .map((event) => event.results.toList());
   }
 
   @override
+  Future<List<QueueDTO>> getQueues() {
+    return _localStorage
+        .readAllAsStream<QueueDTO>()
+        .map((event) => event.results.toList())
+        .first;
+  }
+
+  @override
   Future<void> updateQueue(void Function() callback) {
-    // TODO(demolaf): implement updateQueue
-    throw UnimplementedError();
+    return _localStorage.update<QueueDTO>(callback);
   }
 
   List<QueueDTO> fetchUnSyncedQueues() {
     return _localStorage.read<QueueDTO>(r'lastSyncedAt == $0', [null]).toList();
+  }
+
+  Future<bool> checkAndRemoveExistingUnsyncedQueue({
+    required QueueOperationType operationType,
+    required String todoId,
+  }) async {
+    final unsyncedQueueToDelete = fetchUnSyncedQueues().firstWhereOrNull(
+      (element) => element.todoId == todoId,
+    );
+
+    if (unsyncedQueueToDelete != null) {
+      await deleteQueue(unsyncedQueueToDelete.id.hexString);
+      return true;
+    }
+
+    return false;
   }
 }

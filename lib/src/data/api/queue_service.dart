@@ -29,20 +29,15 @@ class QueueService {
     required String todoId,
   }) async {
     try {
+      // If operation type is delete and todo_object hasn't been synced
+      // yet then remove from queue and return
       if (operationType == QueueOperationType.delete) {
-        // If operation type is delete and todo_object hasn't been synced
-        // yet then remove from queue and return
-        final todo = await _localTodoApi.getTodo(todoId);
+        final exists = await _localQueueApi.checkAndRemoveExistingUnsyncedQueue(
+          operationType: operationType,
+          todoId: todoId,
+        );
 
-        final unSyncedQueues = _localQueueApi.fetchUnSyncedQueues();
-
-        final matchingQueues = unSyncedQueues
-            .where((element) => element.todoId == todo?.id.hexString);
-
-        if (matchingQueues.isNotEmpty) {
-          await _localQueueApi.deleteQueue(matchingQueues.first.id.hexString);
-          return;
-        }
+        if (exists) return;
       }
 
       final newQueue = QueueDTO(
@@ -55,6 +50,7 @@ class QueueService {
       await _localQueueApi.createQueue(newQueue);
     } catch (e) {
       developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -70,22 +66,27 @@ class QueueService {
 
     // TODO(demolaf): Check where un-synced queues
 
-    // Query not synced queues
-    final unSyncedQueues = _localQueueApi.fetchUnSyncedQueues();
+    try {
+      // Query not synced queues
+      final unSyncedQueues = _localQueueApi.fetchUnSyncedQueues();
 
-    for (final unSyncedQueue in unSyncedQueues) {
-      // Get todo_object on which operation is to be carried out
+      for (final unSyncedQueue in unSyncedQueues) {
+        // Get todo_object on which operation is to be carried out
 
-      switch (unSyncedQueue.operationType.toOperationType()) {
-        case QueueOperationType.create:
-          await _handlePushSyncForCreateOperation(unSyncedQueue);
-        case QueueOperationType.update:
-          await _handlePushSyncForUpdateOperation(unSyncedQueue);
-        case QueueOperationType.delete:
-          await _handlePushSyncForDeleteOperation(unSyncedQueue);
-        case QueueOperationType.error:
-          break;
+        switch (unSyncedQueue.operationType.toOperationType()) {
+          case QueueOperationType.create:
+            await _handlePushSyncForCreateOperation(unSyncedQueue);
+          case QueueOperationType.update:
+            await _handlePushSyncForUpdateOperation(unSyncedQueue);
+          case QueueOperationType.delete:
+            await _handlePushSyncForDeleteOperation(unSyncedQueue);
+          case QueueOperationType.error:
+            break;
+        }
       }
+    } catch (e) {
+      developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -101,6 +102,7 @@ class QueueService {
       await markQueueAsSynced(unSyncedQueue);
     } catch (e) {
       developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -114,8 +116,10 @@ class QueueService {
       await _remoteQueueApi.createQueue(
         unSyncedQueue.copyWith(lastSyncedAt: now),
       );
+      await markQueueAsSynced(unSyncedQueue);
     } catch (e) {
       developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -125,14 +129,17 @@ class QueueService {
     try {
       final todo = await _localTodoApi.getTodo(unSyncedQueue.todoId);
 
-      await _remoteTodoApi.createTodo(todo!.copyWith(synced: true));
-      await _remoteQueueApi.createQueue(
-        unSyncedQueue.copyWith(lastSyncedAt: now),
-      );
+      if (todo != null) {
+        await _remoteTodoApi.createTodo(todo.copyWith(synced: true));
+        await _remoteQueueApi.createQueue(
+          unSyncedQueue.copyWith(lastSyncedAt: now),
+        );
 
-      await markQueueAsSynced(unSyncedQueue);
+        await markQueueAsSynced(unSyncedQueue);
+      }
     } catch (e) {
       developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -141,30 +148,35 @@ class QueueService {
 
     final checked = <String, bool>{};
 
-    final queuesInRemote = await _remoteQueueApi.getQueues().first;
-    final queuesInLocal = await _localQueueApi.getQueues().first;
+    try {
+      final queuesInRemote = await _remoteQueueApi.getQueues();
+      final queuesInLocal = await _localQueueApi.getQueues();
 
-    if (queuesInRemote.isEmpty) {
-      developer.log('No queues to pull');
-      return;
-    }
-
-    for (final queue in queuesInLocal) {
-      checked[queue.id.hexString] = false;
-    }
-
-    // developer.log('Queues in remote $queuesInRemote}');
-    for (final queue in queuesInRemote) {
-      // developer.log('Checking queue if need to pull $queue');
-      // Check for queues not on local and store those queues on local
-
-      developer.log(
-        'Contains ${queue.id} ${!checked.containsKey(queue.id.hexString)}',
-      );
-      if (!checked.containsKey(queue.id.hexString)) {
-        developer.log('Queue being pulled ${queue.id}');
-        await _handlePull(queue: queue);
+      if (queuesInRemote.isEmpty) {
+        developer.log('No queues to pull');
+        return;
       }
+
+      for (final queue in queuesInLocal) {
+        checked[queue.id.hexString] = false;
+      }
+
+      // developer.log('Queues in remote $queuesInRemote}');
+      for (final queue in queuesInRemote) {
+        // developer.log('Checking queue if need to pull $queue');
+        // Check for queues not on local and store those queues on local
+
+        developer.log(
+          'Contains ${queue.id} ${!checked.containsKey(queue.id.hexString)}',
+        );
+        if (!checked.containsKey(queue.id.hexString)) {
+          developer.log('Queue being pulled ${queue.id}');
+          await _handlePull(queue: queue);
+        }
+      }
+    } catch (e) {
+      developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -196,6 +208,7 @@ class QueueService {
       }
     } catch (e) {
       developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -215,6 +228,7 @@ class QueueService {
       }
     } catch (e) {
       developer.log(e.toString());
+      rethrow;
     }
   }
 
@@ -230,34 +244,43 @@ class QueueService {
       await _localQueueApi.createQueue(queue);
     } catch (e) {
       developer.log(e.toString());
+      rethrow;
     }
   }
 
   Future<void> markQueueAsSynced(QueueDTO queue) async {
     final now = DateTime.now().toIso8601String();
 
-    await _localQueueApi.updateQueue(() {
-      queue.lastSyncedAt = now;
-    });
+    try {
+      await _localQueueApi.updateQueue(() {
+        queue.lastSyncedAt = now;
+      });
+    } catch (e) {
+      developer.log(e.toString());
+      rethrow;
+    }
   }
 
   /// Check if need to sync queues
   bool checkIfNeedToPushSync() {
-    final results = _localQueueApi.fetchUnSyncedQueues();
-    developer.log('Results from synced query $results, '
-        'needs to sync: ${results.isNotEmpty}');
-    return results.isNotEmpty;
+    try {
+      final results = _localQueueApi.fetchUnSyncedQueues();
+      developer.log('Results from synced query $results, '
+          'needs to sync: ${results.isNotEmpty}');
+      return results.isNotEmpty;
+    } catch (e) {
+      developer.log(e.toString());
+      return false;
+    }
   }
 
   /// We listen here because we're using firebase and it lets us know through
-  /// a stream subscription that a change has been made in queues doc
+  /// a stream subscription thzat a change has been made in queues doc
   ///
   /// In a REST API we would need use another method
   /// 1. Web hooks
   /// 2.
   void listenForChangesInQueuesDoc() {
-    _remoteQueueApi.getQueues().listen((event) {
-      pullQueuesAndTodosFromRemote();
-    });
+    pullQueuesAndTodosFromRemote();
   }
 }

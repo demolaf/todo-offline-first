@@ -16,7 +16,7 @@ class RemoteQueueApi extends QueueApi {
   Future<void> createQueue(QueueDTO queue) async {
     final docRef = _getUserQueuesDocRef();
 
-    final queuesInRemote = await getQueues().first;
+    final queuesInRemote = await getQueues();
 
     final queueToSyncJson = [
       ...queuesInRemote.map((e) => e.toJson()),
@@ -39,7 +39,25 @@ class RemoteQueueApi extends QueueApi {
   }
 
   @override
-  Stream<List<QueueDTO>> getQueues() {
+  Future<List<QueueDTO>> getQueues() {
+    final docRef = _getUserQueuesDocRef();
+
+    return docRef.get().then((value) {
+      final queuesResponse = value.data() as Map<String, dynamic>?;
+
+      if (queuesResponse != null) {
+        final queues = queuesResponse['queues'] as List<dynamic>;
+        return queues
+            .map((e) => QueueDTOJsonParser.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+
+      return <QueueDTO>[];
+    });
+  }
+
+  @override
+  Stream<List<QueueDTO>> getQueuesAsStream() {
     final docRef = _getUserQueuesDocRef();
 
     return docRef.snapshots().asyncMap((event) {

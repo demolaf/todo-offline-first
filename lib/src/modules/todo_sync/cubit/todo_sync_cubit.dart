@@ -21,11 +21,10 @@ class TodoSyncCubit extends Cubit<TodoSyncState> {
   /// Syncing remote
   Future<void> synchronizingTodos({required bool connected}) async {
     developer.log('initiating sync timer');
-
-    _todoSyncRepository.listenForPullSync();
-
     _syncTimer = Timer.periodic(const Duration(seconds: 10), (timer) async {
       if (connected) {
+        _todoSyncRepository.listenForPullSync();
+
         final needToSync = _todoSyncRepository.needToPushSync();
         developer.log('checking if sync needed $needToSync');
         if (needToSync && connected) {
