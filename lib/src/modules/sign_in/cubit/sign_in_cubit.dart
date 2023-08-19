@@ -1,11 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:todo_bloc/src/core/enums/enums.dart';
 import 'package:todo_bloc/src/data/repositories/auth/auth_repository.dart';
-import 'package:todo_bloc/src/modules/create_todo/bloc/create_todo_bloc.dart';
 
 part 'sign_in_cubit.freezed.dart';
-
 part 'sign_in_state.dart';
 
 class SignInCubit extends Cubit<SignInState> {

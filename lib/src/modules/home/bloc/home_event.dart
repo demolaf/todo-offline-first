@@ -8,10 +8,8 @@ abstract class HomeEvent extends Equatable {
 }
 
 class HomeInitializationRequested extends HomeEvent {
-  const HomeInitializationRequested({required this.sourceType});
-
-  final SourceType sourceType;
+  const HomeInitializationRequested();
 
   @override
-  List<Object> get props => [sourceType];
+  List<Object> get props => [];
 }

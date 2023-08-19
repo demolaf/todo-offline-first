@@ -1,12 +1,10 @@
-import 'dart:developer' as developer;
-import 'package:todo_bloc/src/data/api/todo_api.dart';
-import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
-import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
+// import 'dart:developer' as developer;
 
-enum SourceType {
-  local,
-  remote,
-}
+import 'package:realm/realm.dart';
+import 'package:todo_bloc/src/data/api/todo/todo_api.dart';
+import 'package:todo_bloc/src/data/models/domains/todo.dart';
+import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
+import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 
 class TodoRepositoryImpl implements TodoRepository {
   TodoRepositoryImpl({
@@ -15,9 +13,11 @@ class TodoRepositoryImpl implements TodoRepository {
 
   final TodoApi _todoApi;
 
+  /// We use this to ensure that we only create and update
+  /// the one new object at a time from the create_todo user interface
   @override
   String getGeneratedTodoId() {
-    return _todoApi.generateTodoId();
+    return ObjectId().hexString;
   }
 
   @override
@@ -30,36 +30,31 @@ class TodoRepositoryImpl implements TodoRepository {
     required String title,
   }) async {
     await _todoApi.createTodo(
-      id: id,
-      color: color,
-      time: time,
-      priority: priority,
-      description: description,
-      title: title,
+      TodoDTO(
+        ObjectId.fromHexString(id),
+        color,
+        time.toIso8601String(),
+        priority,
+        description,
+        title,
+        false,
+        false,
+      ),
     );
   }
 
   @override
-  Stream<List<TodoDTO>> getAllTodos(SourceType sourceType) {
-    return _todoApi.getAllTodos(sourceType);
+  Stream<List<Todo>> getAllTodos() => _todoApi
+      .getTodos()
+      .map((event) => event.map((e) => e.toPlainObject()).toList());
+
+  @override
+  Future<Todo?> getTodo(String id) async {
+    return _todoApi.getTodo(id).then((value) => value?.toPlainObject());
   }
 
   @override
-  bool checkIfNeedToSync() {
-    final results = _todoApi.fetchUnSyncedTodos();
-    developer.log('Results from synced query $results');
-    return results.isNotEmpty;
-  }
-
-  @override
-  Future<void> syncTodosWithRemote() async {
-    await _todoApi.pushUnSyncedTodosToRemote();
-    await _todoApi.cacheRefresh();
-  }
-
-  @override
-  Future<void> getTodo() {
-    // TODO(demolaf): implement getTodo
-    throw UnimplementedError();
+  void deleteTodo(String id) {
+    _todoApi.deleteTodo(id);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,10 +6,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/core/constants/theme.dart';
-import 'package:todo_bloc/src/data/api/todo_api.dart';
+import 'package:todo_bloc/src/data/api/queue/local_queue_api.dart';
+import 'package:todo_bloc/src/data/api/queue/remote_queue_api.dart';
+import 'package:todo_bloc/src/data/api/queue_service.dart';
+import 'package:todo_bloc/src/data/api/todo/local_todo_api.dart';
+import 'package:todo_bloc/src/data/api/todo/remote_todo_api.dart';
 import 'package:todo_bloc/src/data/api/user_api.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage_impl.dart';
+import 'package:todo_bloc/src/data/models/dtos/user/user_dto.dart';
 import 'package:todo_bloc/src/data/repositories/auth/auth_repository.dart';
 import 'package:todo_bloc/src/data/repositories/auth/auth_repository_impl.dart';
 import 'package:todo_bloc/src/data/repositories/connection_checker/connection_checker.dart';
@@ -17,10 +23,13 @@ import 'package:todo_bloc/src/data/repositories/settings/settings_repository.dar
 import 'package:todo_bloc/src/data/repositories/settings/settings_repository_impl.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository_impl.dart';
+import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
+import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository_impl.dart';
 import 'package:todo_bloc/src/l10n/l10n.dart';
 import 'package:todo_bloc/src/modules/connection_checker/bloc/connection_checker_bloc.dart';
 import 'package:todo_bloc/src/modules/landing_loading/view/landing_loading_view.dart';
 import 'package:todo_bloc/src/modules/settings/cubit/settings_cubit.dart';
+import 'package:todo_bloc/src/modules/todo_sync/cubit/todo_sync_cubit.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -57,8 +66,30 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<TodoRepository>(
           create: (context) => TodoRepositoryImpl(
-            todoApi: TodoApi(
+            todoApi: LocalTodoApi(
               localStorage: context.read<LocalStorage>(),
+            ),
+          ),
+        ),
+        RepositoryProvider<TodoSyncRepository>(
+          create: (context) => TodoSyncRepositoryImpl(
+            queueService: QueueService(
+              localQueueApi: LocalQueueApi(
+                localStorage: context.read<LocalStorage>(),
+              ),
+              remoteQueueApi: RemoteQueueApi(
+                firestore: FirebaseFirestore.instance,
+                userId:
+                    context.read<LocalStorage>().readAll<UserDTO>().first.uid,
+              ),
+              localTodoApi: LocalTodoApi(
+                localStorage: context.read<LocalStorage>(),
+              ),
+              remoteTodoApi: RemoteTodoApi(
+                firestore: FirebaseFirestore.instance,
+                userId:
+                    context.read<LocalStorage>().readAll<UserDTO>().first.uid,
+              ),
             ),
           ),
         ),
@@ -73,6 +104,11 @@ class App extends StatelessWidget {
               connectionChecker: context.read<ConnectionChecker>(),
               todoRepository: context.read<TodoRepository>(),
             )..add(const ConnectionCheckerInitializationRequested()),
+          ),
+          BlocProvider(
+            create: (context) => TodoSyncCubit(
+              todoSyncRepository: context.read<TodoSyncRepository>(),
+            ),
           ),
         ],
         child: BlocBuilder<SettingsCubit, SettingsState>(

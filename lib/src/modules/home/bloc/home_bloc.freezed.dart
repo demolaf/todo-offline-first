@@ -20,21 +20,24 @@ mixin _$HomeState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<TodoDTO> todos) ready,
+    required TResult Function(List<Todo> todos) ready,
+    required TResult Function() viewingQueues,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<TodoDTO> todos)? ready,
+    TResult? Function(List<Todo> todos)? ready,
+    TResult? Function()? viewingQueues,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<TodoDTO> todos)? ready,
+    TResult Function(List<Todo> todos)? ready,
+    TResult Function()? viewingQueues,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$HomeState {
     required TResult Function(_Initial value) initial,
     required TResult Function(HomeStateLoading value) loading,
     required TResult Function(HomeStateReady value) ready,
+    required TResult Function(ViewingQueues value) viewingQueues,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$HomeState {
     TResult? Function(_Initial value)? initial,
     TResult? Function(HomeStateLoading value)? loading,
     TResult? Function(HomeStateReady value)? ready,
+    TResult? Function(ViewingQueues value)? viewingQueues,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$HomeState {
     TResult Function(_Initial value)? initial,
     TResult Function(HomeStateLoading value)? loading,
     TResult Function(HomeStateReady value)? ready,
+    TResult Function(ViewingQueues value)? viewingQueues,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -118,7 +124,8 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<TodoDTO> todos) ready,
+    required TResult Function(List<Todo> todos) ready,
+    required TResult Function() viewingQueues,
   }) {
     return initial();
   }
@@ -128,7 +135,8 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<TodoDTO> todos)? ready,
+    TResult? Function(List<Todo> todos)? ready,
+    TResult? Function()? viewingQueues,
   }) {
     return initial?.call();
   }
@@ -138,7 +146,8 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<TodoDTO> todos)? ready,
+    TResult Function(List<Todo> todos)? ready,
+    TResult Function()? viewingQueues,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -153,6 +162,7 @@ class _$_Initial implements _Initial {
     required TResult Function(_Initial value) initial,
     required TResult Function(HomeStateLoading value) loading,
     required TResult Function(HomeStateReady value) ready,
+    required TResult Function(ViewingQueues value) viewingQueues,
   }) {
     return initial(this);
   }
@@ -163,6 +173,7 @@ class _$_Initial implements _Initial {
     TResult? Function(_Initial value)? initial,
     TResult? Function(HomeStateLoading value)? loading,
     TResult? Function(HomeStateReady value)? ready,
+    TResult? Function(ViewingQueues value)? viewingQueues,
   }) {
     return initial?.call(this);
   }
@@ -173,6 +184,7 @@ class _$_Initial implements _Initial {
     TResult Function(_Initial value)? initial,
     TResult Function(HomeStateLoading value)? loading,
     TResult Function(HomeStateReady value)? ready,
+    TResult Function(ViewingQueues value)? viewingQueues,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -226,7 +238,8 @@ class _$HomeStateLoading implements HomeStateLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<TodoDTO> todos) ready,
+    required TResult Function(List<Todo> todos) ready,
+    required TResult Function() viewingQueues,
   }) {
     return loading();
   }
@@ -236,7 +249,8 @@ class _$HomeStateLoading implements HomeStateLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<TodoDTO> todos)? ready,
+    TResult? Function(List<Todo> todos)? ready,
+    TResult? Function()? viewingQueues,
   }) {
     return loading?.call();
   }
@@ -246,7 +260,8 @@ class _$HomeStateLoading implements HomeStateLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<TodoDTO> todos)? ready,
+    TResult Function(List<Todo> todos)? ready,
+    TResult Function()? viewingQueues,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -261,6 +276,7 @@ class _$HomeStateLoading implements HomeStateLoading {
     required TResult Function(_Initial value) initial,
     required TResult Function(HomeStateLoading value) loading,
     required TResult Function(HomeStateReady value) ready,
+    required TResult Function(ViewingQueues value) viewingQueues,
   }) {
     return loading(this);
   }
@@ -271,6 +287,7 @@ class _$HomeStateLoading implements HomeStateLoading {
     TResult? Function(_Initial value)? initial,
     TResult? Function(HomeStateLoading value)? loading,
     TResult? Function(HomeStateReady value)? ready,
+    TResult? Function(ViewingQueues value)? viewingQueues,
   }) {
     return loading?.call(this);
   }
@@ -281,6 +298,7 @@ class _$HomeStateLoading implements HomeStateLoading {
     TResult Function(_Initial value)? initial,
     TResult Function(HomeStateLoading value)? loading,
     TResult Function(HomeStateReady value)? ready,
+    TResult Function(ViewingQueues value)? viewingQueues,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -300,7 +318,7 @@ abstract class _$$HomeStateReadyCopyWith<$Res> {
           _$HomeStateReady value, $Res Function(_$HomeStateReady) then) =
       __$$HomeStateReadyCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<TodoDTO> todos});
+  $Res call({List<Todo> todos});
 }
 
 /// @nodoc
@@ -320,7 +338,7 @@ class __$$HomeStateReadyCopyWithImpl<$Res>
       todos: null == todos
           ? _value._todos
           : todos // ignore: cast_nullable_to_non_nullable
-              as List<TodoDTO>,
+              as List<Todo>,
     ));
   }
 }
@@ -328,11 +346,11 @@ class __$$HomeStateReadyCopyWithImpl<$Res>
 /// @nodoc
 
 class _$HomeStateReady implements HomeStateReady {
-  const _$HomeStateReady({required final List<TodoDTO> todos}) : _todos = todos;
+  const _$HomeStateReady({required final List<Todo> todos}) : _todos = todos;
 
-  final List<TodoDTO> _todos;
+  final List<Todo> _todos;
   @override
-  List<TodoDTO> get todos {
+  List<Todo> get todos {
     if (_todos is EqualUnmodifiableListView) return _todos;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_todos);
@@ -366,7 +384,8 @@ class _$HomeStateReady implements HomeStateReady {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<TodoDTO> todos) ready,
+    required TResult Function(List<Todo> todos) ready,
+    required TResult Function() viewingQueues,
   }) {
     return ready(todos);
   }
@@ -376,7 +395,8 @@ class _$HomeStateReady implements HomeStateReady {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<TodoDTO> todos)? ready,
+    TResult? Function(List<Todo> todos)? ready,
+    TResult? Function()? viewingQueues,
   }) {
     return ready?.call(todos);
   }
@@ -386,7 +406,8 @@ class _$HomeStateReady implements HomeStateReady {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<TodoDTO> todos)? ready,
+    TResult Function(List<Todo> todos)? ready,
+    TResult Function()? viewingQueues,
     required TResult orElse(),
   }) {
     if (ready != null) {
@@ -401,6 +422,7 @@ class _$HomeStateReady implements HomeStateReady {
     required TResult Function(_Initial value) initial,
     required TResult Function(HomeStateLoading value) loading,
     required TResult Function(HomeStateReady value) ready,
+    required TResult Function(ViewingQueues value) viewingQueues,
   }) {
     return ready(this);
   }
@@ -411,6 +433,7 @@ class _$HomeStateReady implements HomeStateReady {
     TResult? Function(_Initial value)? initial,
     TResult? Function(HomeStateLoading value)? loading,
     TResult? Function(HomeStateReady value)? ready,
+    TResult? Function(ViewingQueues value)? viewingQueues,
   }) {
     return ready?.call(this);
   }
@@ -421,6 +444,7 @@ class _$HomeStateReady implements HomeStateReady {
     TResult Function(_Initial value)? initial,
     TResult Function(HomeStateLoading value)? loading,
     TResult Function(HomeStateReady value)? ready,
+    TResult Function(ViewingQueues value)? viewingQueues,
     required TResult orElse(),
   }) {
     if (ready != null) {
@@ -431,11 +455,125 @@ class _$HomeStateReady implements HomeStateReady {
 }
 
 abstract class HomeStateReady implements HomeState {
-  const factory HomeStateReady({required final List<TodoDTO> todos}) =
+  const factory HomeStateReady({required final List<Todo> todos}) =
       _$HomeStateReady;
 
-  List<TodoDTO> get todos;
+  List<Todo> get todos;
   @JsonKey(ignore: true)
   _$$HomeStateReadyCopyWith<_$HomeStateReady> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ViewingQueuesCopyWith<$Res> {
+  factory _$$ViewingQueuesCopyWith(
+          _$ViewingQueues value, $Res Function(_$ViewingQueues) then) =
+      __$$ViewingQueuesCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ViewingQueuesCopyWithImpl<$Res>
+    extends _$HomeStateCopyWithImpl<$Res, _$ViewingQueues>
+    implements _$$ViewingQueuesCopyWith<$Res> {
+  __$$ViewingQueuesCopyWithImpl(
+      _$ViewingQueues _value, $Res Function(_$ViewingQueues) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ViewingQueues implements ViewingQueues {
+  const _$ViewingQueues();
+
+  @override
+  String toString() {
+    return 'HomeState.viewingQueues()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$ViewingQueues);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<Todo> todos) ready,
+    required TResult Function() viewingQueues,
+  }) {
+    return viewingQueues();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<Todo> todos)? ready,
+    TResult? Function()? viewingQueues,
+  }) {
+    return viewingQueues?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<Todo> todos)? ready,
+    TResult Function()? viewingQueues,
+    required TResult orElse(),
+  }) {
+    if (viewingQueues != null) {
+      return viewingQueues();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(HomeStateLoading value) loading,
+    required TResult Function(HomeStateReady value) ready,
+    required TResult Function(ViewingQueues value) viewingQueues,
+  }) {
+    return viewingQueues(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(HomeStateLoading value)? loading,
+    TResult? Function(HomeStateReady value)? ready,
+    TResult? Function(ViewingQueues value)? viewingQueues,
+  }) {
+    return viewingQueues?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(HomeStateLoading value)? loading,
+    TResult Function(HomeStateReady value)? ready,
+    TResult Function(ViewingQueues value)? viewingQueues,
+    required TResult orElse(),
+  }) {
+    if (viewingQueues != null) {
+      return viewingQueues(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ViewingQueues implements HomeState {
+  const factory ViewingQueues() = _$ViewingQueues;
 }

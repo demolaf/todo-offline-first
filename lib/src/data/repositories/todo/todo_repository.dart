@@ -1,5 +1,4 @@
-import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
-import 'package:todo_bloc/src/data/repositories/todo/todo_repository_impl.dart';
+import 'package:todo_bloc/src/data/models/domains/todo.dart';
 
 abstract class TodoRepository {
   String getGeneratedTodoId();
@@ -13,11 +12,9 @@ abstract class TodoRepository {
     required String title,
   });
 
-  Future<void> getTodo();
+  Future<Todo?> getTodo(String id);
 
-  Stream<List<TodoDTO>> getAllTodos(SourceType sourceType);
+  void deleteTodo(String id);
 
-  Future<void> syncTodosWithRemote();
-
-  bool checkIfNeedToSync();
+  Stream<List<Todo>> getAllTodos();
 }

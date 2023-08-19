@@ -1,5 +1,5 @@
 import 'package:todo_bloc/src/core/global_imports.dart';
-import 'package:todo_bloc/src/data/models/todo/todo_dto.dart';
+import 'package:todo_bloc/src/data/models/domains/todo.dart';
 import 'package:todo_bloc/src/modules/home/view/widgets/todo_list_item.dart';
 
 class TodaysTodosListView extends StatelessWidget {
@@ -8,7 +8,7 @@ class TodaysTodosListView extends StatelessWidget {
     super.key,
   });
 
-  final List<TodoDTO> todos;
+  final List<Todo> todos;
 
   @override
   Widget build(BuildContext context) {
