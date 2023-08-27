@@ -34,7 +34,7 @@ class ViewTodoBloc extends Bloc<EditTodoEvent, ViewTodoState> {
 
     on<DeleteTodo>((event, emit) async {
       _todoRepository.deleteTodo(event.id);
-      await _todoSyncRepository.createDeleteQueueForTodo(
+      await _todoSyncRepository.createQueueForTodo(
         operationType: QueueOperationType.delete,
         id: event.id,
       );

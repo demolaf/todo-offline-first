@@ -15,7 +15,7 @@ class TodoListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(ViewTodoView.route(id: todo.id.hexString));
+        Navigator.of(context).push(ViewTodoView.route(id: todo.id));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 24),
@@ -41,7 +41,7 @@ class TodoListItem extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-                if (todo.synced)
+                if (todo.synced ?? false)
                   const Icon(Icons.check_rounded)
                 else
                   const Icon(Icons.sync),
@@ -57,7 +57,7 @@ class TodoListItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      DateTime.parse(todo.time).formatDateOnly(),
+                      DateTime.parse(todo.time!).formatDateOnly(),
                     ),
                   ],
                 ),
@@ -69,7 +69,7 @@ class TodoListItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      DateTime.parse(todo.time).formatTimeOnly(),
+                      DateTime.parse(todo.time!).formatTimeOnly(),
                     ),
                   ],
                 ),
@@ -118,11 +118,11 @@ class TodoListItem extends StatelessWidget {
                           vertical: 12,
                         ),
                         decoration: ShapeDecoration(
-                          color: todo.priority.toTodoPriority().toColor(),
+                          color: todo.priority?.toTodoPriority().toColor(),
                           shape: const StadiumBorder(),
                         ),
                         child: Text(
-                          todo.priority.capitalize,
+                          '${todo.priority?.capitalize}',
                         ),
                       ),
                     ],

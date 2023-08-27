@@ -10,31 +10,23 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
   final QueueService _queueService;
 
   @override
-  bool needToPushSync() => _queueService.checkIfNeedToPushSync();
+  Future<void> needToPush() {
+    return _queueService.pushSyncIfNeeded();
+  }
 
   @override
-  void listenForPullSync() {
-    _queueService.listenForChangesInQueuesDoc();
+  Future<void> needToPull() {
+    return _queueService.pullSyncIfNeeded();
   }
 
   @override
   Future<void> createQueueForTodo({
     required QueueOperationType operationType,
     required String id,
-  }) =>
-      _queueService.storeQueueToSync(
-        operationType: QueueOperationType.create,
-        todoId: id,
-      );
-
-  @override
-  Future<void> syncTodosWithRemote() =>
-      _queueService.pushUnSyncedQueuesAndTodosToRemote();
-
-  @override
-  Future<void> createDeleteQueueForTodo({
-    required QueueOperationType operationType,
-    required String id,
-  }) =>
-      _queueService.storeQueueToSync(operationType: operationType, todoId: id);
+  }) {
+    return _queueService.storeQueueToSync(
+      operationType: operationType,
+      todoId: id,
+    );
+  }
 }

@@ -38,7 +38,7 @@ class RemoteTodoApi extends TodoApi {
     todosInRemote.removeWhere((element) => element.id.hexString == id);
 
     final todosToSyncJson = <Map<String, dynamic>>[
-      ...todosInRemote.map((e) => e.toJson())
+      ...todosInRemote.map((e) => e.toJson()),
     ];
 
     await docRef.update({'todos': todosToSyncJson});

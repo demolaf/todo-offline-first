@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:todo_bloc/src/core/enums/enums.dart';
+import 'package:todo_bloc/src/data/models/domains/todo.dart';
 import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
@@ -19,44 +20,57 @@ class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
     required TodoSyncRepository todoSyncRepository,
   })  : _todoRepository = todoRepository,
         _todoSyncRepository = todoSyncRepository,
-        _newTodoId = todoRepository.getGeneratedTodoId(),
         super(const CreateTodoState.loading()) {
-    // on<CreateTodoInitializationRequested>((event, emit) {
-    //
-    // });
+    on<CreateTodoInitializationRequested>((event, emit) {
+      emit(
+        state.copyWith(
+          newTodo: Todo(
+            id: todoRepository.getGeneratedTodoId(),
+            title: '',
+            description: '',
+            synced: false,
+            completed: false,
+          ),
+        ),
+      );
+    });
 
-    on<CreateTodo>((event, emit) async {
+    on<UpdateTodo>((event, emit) async {
+      emit(state.copyWith(newTodo: event.todo));
+    });
+
+    on<SaveTodo>((event, emit) async {
+      if (state.newTodo!.title.isEmpty && state.newTodo!.description.isEmpty) {
+        return;
+      }
+
       try {
         emit(
-          const CreateTodoState.creatingTodo(
+          CreateTodoState.creatingTodo(
             processingState: ProcessingState.processing,
+            newTodo: state.newTodo,
           ),
         );
 
-        await _todoRepository.createTodo(
-          id: _newTodoId,
-          title: event.title,
-          description: event.description,
-          color: event.color,
-          priority: event.priority.name,
-          time: event.time,
-        );
+        await _todoRepository.createTodo(todo: state.newTodo!);
 
         await _todoSyncRepository.createQueueForTodo(
           operationType: QueueOperationType.create,
-          id: _newTodoId,
+          id: state.newTodo!.id,
         );
 
         emit(
-          const CreateTodoState.creatingTodo(
+          CreateTodoState.creatingTodo(
             processingState: ProcessingState.success,
+            newTodo: state.newTodo,
           ),
         );
       } catch (e) {
-        developer.log(e.toString());
+        developer.log('HERE: $e');
         emit(
-          const CreateTodoState.creatingTodo(
+          CreateTodoState.creatingTodo(
             processingState: ProcessingState.failure,
+            newTodo: state.newTodo,
           ),
         );
       }
@@ -65,5 +79,4 @@ class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
 
   final TodoRepository _todoRepository;
   final TodoSyncRepository _todoSyncRepository;
-  final String _newTodoId;
 }

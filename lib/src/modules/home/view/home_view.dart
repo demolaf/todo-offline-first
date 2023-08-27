@@ -113,7 +113,7 @@ class _HomeViewState extends State<HomeView> {
           if (state is ConnectionCheckerStateReady) {
             context
                 .read<TodoSyncCubit>()
-                .synchronizingTodos(connected: state.connected);
+                .synchronizingTodosWithoutTimer(connected: state.connected);
 
             if (state.connected) {
               showSnackBar(

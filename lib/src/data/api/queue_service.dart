@@ -262,15 +262,17 @@ class QueueService {
   }
 
   /// Check if need to sync queues
-  bool checkIfNeedToPushSync() {
+  Future<void> pushSyncIfNeeded() async {
     try {
       final results = _localQueueApi.fetchUnSyncedQueues();
       developer.log('Results from synced query $results, '
           'needs to sync: ${results.isNotEmpty}');
-      return results.isNotEmpty;
+
+      if (results.isNotEmpty) {
+        await pushUnSyncedQueuesAndTodosToRemote();
+      }
     } catch (e) {
       developer.log(e.toString());
-      return false;
     }
   }
 
@@ -280,7 +282,11 @@ class QueueService {
   /// In a REST API we would need use another method
   /// 1. Web hooks
   /// 2.
-  void listenForChangesInQueuesDoc() {
-    pullQueuesAndTodosFromRemote();
+  Future<void> pullSyncIfNeeded() async {
+    try {
+      await pullQueuesAndTodosFromRemote();
+    } catch (e) {
+      developer.log(e.toString());
+    }
   }
 }

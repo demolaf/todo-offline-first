@@ -7,7 +7,7 @@ part 'todo_dto.g.dart';
 extension TodoDTOJsonParser on TodoDTO {
   Todo toPlainObject() {
     return Todo(
-      id: id,
+      id: id.hexString,
       color: color,
       time: time,
       priority: priority,
