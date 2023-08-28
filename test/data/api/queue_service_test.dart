@@ -240,34 +240,13 @@ void main() {
       verifyNoMoreInteractions(remoteTodoApi);
     });
 
-    // test('if queue operation is create', () async {
-    //   when(() => queue.operationType)
-    //       .thenReturn(QueueOperationType.create.name);
-    //   when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => [queue]);
-    //   when(() => localQueueApi.getQueues()).thenAnswer((_) async => []);
-    //   when(() => remoteTodoApi.getTodo(any())).thenAnswer((_) async => todo_object);
-    //   when(() => localTodoApi.createTodo(any())).thenAnswer((_) async => todo_object);
-    //   when(() => localQueueApi.createQueue(any()))
-    //       .thenAnswer((_) async => queue);
-    //
-    //   await sut.pullQueuesAndTodosFromRemote();
-    //
-    //   verify(() => remoteQueueApi.getQueues()).called(1);
-    //   verify(() => localQueueApi.getQueues()).called(1);
-    //   verify(() => remoteTodoApi.getTodo(any())).called(1);
-    //   verify(() => localTodoApi.createTodo(any())).called(1);
-    //   verify(() => localQueueApi.createQueue(any())).called(1);
-    // });
-
-    test('if queue operation is update', () async {
-      print(todo.lastModifiedAt);
+    test('if queue operation is create', () async {
       when(() => queue.operationType)
-          .thenReturn(QueueOperationType.update.name);
+          .thenReturn(QueueOperationType.create.name);
       when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => [queue]);
       when(() => localQueueApi.getQueues()).thenAnswer((_) async => []);
       when(() => remoteTodoApi.getTodo(any())).thenAnswer((_) async => todo);
-      when(() => localTodoApi.getTodo(any())).thenAnswer((_) async => todo);
-      when(() => localTodoApi.updateTodo(any())).thenAnswer((_) async => todo);
+      when(() => localTodoApi.createTodo(any())).thenAnswer((_) async => todo);
       when(() => localQueueApi.createQueue(any()))
           .thenAnswer((_) async => queue);
 
@@ -276,10 +255,31 @@ void main() {
       verify(() => remoteQueueApi.getQueues()).called(1);
       verify(() => localQueueApi.getQueues()).called(1);
       verify(() => remoteTodoApi.getTodo(any())).called(1);
-      verify(() => localTodoApi.getTodo(any())).called(1);
-      verify(() => localTodoApi.updateTodo(any())).called(1);
+      verify(() => localTodoApi.createTodo(any())).called(1);
       verify(() => localQueueApi.createQueue(any())).called(1);
     });
+
+    // test('if queue operation is update', () async {
+    //   print(todo.lastModifiedAt);
+    //   when(() => queue.operationType)
+    //       .thenReturn(QueueOperationType.update.name);
+    //   when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => [queue]);
+    //   when(() => localQueueApi.getQueues()).thenAnswer((_) async => []);
+    //   when(() => remoteTodoApi.getTodo(any())).thenAnswer((_) async => todo_);
+    //   when(() => localTodoApi.getTodo(any())).thenAnswer((_) async => todo_);
+    //   when(() => localTodoApi.updateTodo(any())).thenAnswer((_) async => todo_);
+    //   when(() => localQueueApi.createQueue(any()))
+    //       .thenAnswer((_) async => queue);
+    //
+    //   await sut.pullQueuesAndTodosFromRemote();
+    //
+    //   verify(() => remoteQueueApi.getQueues()).called(1);
+    //   verify(() => localQueueApi.getQueues()).called(1);
+    //   verify(() => remoteTodoApi.getTodo(any())).called(1);
+    //   verify(() => localTodoApi.getTodo(any())).called(1);
+    //   verify(() => localTodoApi.updateTodo(any())).called(1);
+    //   verify(() => localQueueApi.createQueue(any())).called(1);
+    // });
 
     test('if queue operation is delete', () async {
       when(() => queue.operationType)
