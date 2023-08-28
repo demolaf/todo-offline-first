@@ -27,7 +27,7 @@ dependencies:
   internet_connection_checker_plus: ^2.0.0
   intl: ^0.18.0
   json_annotation: ^4.8.1
-  moment_dart: ^0.18.1
+  moment_dart: ^1.0.1
   realm: ^1.3.0
 
 dev_dependencies:
