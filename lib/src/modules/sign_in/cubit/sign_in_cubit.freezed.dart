@@ -214,11 +214,11 @@ class __$$SignInStateAuthenticatingCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? processingState = freezed,
+    Object? processingState = null,
     Object? message = null,
   }) {
     return _then(_$SignInStateAuthenticating(
-      processingState: freezed == processingState
+      processingState: null == processingState
           ? _value.processingState
           : processingState // ignore: cast_nullable_to_non_nullable
               as ProcessingState,
@@ -251,14 +251,13 @@ class _$SignInStateAuthenticating implements SignInStateAuthenticating {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SignInStateAuthenticating &&
-            const DeepCollectionEquality()
-                .equals(other.processingState, processingState) &&
+            (identical(other.processingState, processingState) ||
+                other.processingState == processingState) &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(processingState), message);
+  int get hashCode => Object.hash(runtimeType, processingState, message);
 
   @JsonKey(ignore: true)
   @override

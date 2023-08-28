@@ -2,11 +2,16 @@ part of 'create_todo_bloc.dart';
 
 @freezed
 class CreateTodoState with _$CreateTodoState {
-  const factory CreateTodoState.loading() = Loading;
+  const factory CreateTodoState({
+    Todo? todo,
+  }) = _CreateTodoState;
 
-  const factory CreateTodoState.ready() = Ready;
+  const factory CreateTodoState.loading({
+    Todo? todo,
+  }) = CreatingTodoLoading;
 
-  const factory CreateTodoState.creatingTodo({
+  const factory CreateTodoState.savingTodo({
     required ProcessingState processingState,
-  }) = CreatingTodo;
+    Todo? todo,
+  }) = SavingTodo;
 }

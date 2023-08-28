@@ -34,6 +34,10 @@ class LocalTodoApi extends TodoApi {
     throw UnimplementedError();
   }
 
+  Future<void> updateTodoLocal(void Function() callback) {
+    return _localStorage.update<TodoDTO>(callback);
+  }
+
   @override
   Future<void> deleteTodo(String id) async {
     final todo = await getTodo(id);

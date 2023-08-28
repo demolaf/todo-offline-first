@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 enum TodoPriority {
   high,
   medium,
-  low,
   normal,
+  low,
 }
 
 extension ParseTodoPriorityToColor on TodoPriority {
@@ -14,10 +14,36 @@ extension ParseTodoPriorityToColor on TodoPriority {
         return Colors.red;
       case TodoPriority.medium:
         return Colors.yellow;
-      case TodoPriority.low:
-        return Colors.green;
       case TodoPriority.normal:
-        return Colors.grey;
+        return Colors.green;
+      case TodoPriority.low:
+        return Colors.blue;
+    }
+  }
+
+  int toIndex() {
+    switch (this) {
+      case TodoPriority.high:
+        return 3;
+      case TodoPriority.medium:
+        return 2;
+      case TodoPriority.normal:
+        return 1;
+      case TodoPriority.low:
+        return 0;
+    }
+  }
+
+  String toShortString() {
+    switch (this) {
+      case TodoPriority.high:
+        return 'High';
+      case TodoPriority.medium:
+        return 'Medium';
+      case TodoPriority.normal:
+        return 'Normal';
+      case TodoPriority.low:
+        return 'Low';
     }
   }
 }
@@ -25,14 +51,14 @@ extension ParseTodoPriorityToColor on TodoPriority {
 extension ParseStringToTodoPriority on String {
   TodoPriority toTodoPriority() {
     switch (this) {
-      case 'high':
+      case 'High':
         return TodoPriority.high;
-      case 'medium':
+      case 'Medium':
         return TodoPriority.medium;
-      case 'low':
-        return TodoPriority.low;
-      case 'normal':
+      case 'Normal':
         return TodoPriority.normal;
+      case 'Low':
+        return TodoPriority.low;
       default:
         return TodoPriority.normal;
     }

@@ -31,64 +31,50 @@ class SignInView extends StatelessWidget {
               Navigator.of(context).push(HomeView.route());
             }
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: GestureDetector(
-                  onTap: () async {
-                    await context.read<SignInCubit>().signInUserWithGoogle();
+          child: GestureDetector(
+            onTap: () async {
+              await context.read<SignInCubit>().signInUserWithGoogle();
+            },
+            child: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.05,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: BlocSelector<SignInCubit, SignInState, bool>(
+                  selector: (state) {
+                    if (state is SignInStateAuthenticating) {
+                      return state.processingState ==
+                          ProcessingState.processing;
+                    }
+                    return false;
                   },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: BlocSelector<SignInCubit, SignInState, bool>(
-                      selector: (state) {
-                        if (state is SignInStateAuthenticating) {
-                          return state.processingState ==
-                              ProcessingState.processing;
-                        }
-                        return false;
-                      },
-                      builder: (context, isAuthenticating) {
-                        if (isAuthenticating) {
-                          return Center(
-                            child: SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                strokeWidth: 3,
-                              ),
-                            ),
-                          );
-                        }
-                        return Center(
-                          child: Text(
-                            'Login with Google',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
+                  builder: (context, isAuthenticating) {
+                    if (isAuthenticating) {
+                      return SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          strokeWidth: 3,
+                        ),
+                      );
+                    }
+                    return Text(
+                      'Login with Google',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

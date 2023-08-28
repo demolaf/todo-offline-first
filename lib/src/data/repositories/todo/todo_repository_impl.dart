@@ -21,24 +21,18 @@ class TodoRepositoryImpl implements TodoRepository {
   }
 
   @override
-  Future<void> createTodo({
-    required String id,
-    required String color,
-    required DateTime time,
-    required String priority,
-    required String description,
-    required String title,
-  }) async {
+  Future<void> upsertTodo({required Todo todo}) async {
     await _todoApi.createTodo(
       TodoDTO(
-        ObjectId.fromHexString(id),
-        color,
-        time.toIso8601String(),
-        priority,
-        description,
-        title,
+        ObjectId.fromHexString(todo.id),
+        todo.color!,
+        todo.time!,
+        todo.priority!,
+        todo.description,
+        todo.title,
+        todo.lastModifiedAt!,
         false,
-        false,
+        todo.completed ?? false,
       ),
     );
   }

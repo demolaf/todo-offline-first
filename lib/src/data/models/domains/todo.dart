@@ -1,30 +1,22 @@
-import 'package:realm/realm.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Todo {
-  Todo({
-    required this.id,
-    required this.color,
-    required this.time,
-    required this.priority,
-    required this.description,
-    required this.title,
-    required this.synced,
-    required this.completed,
-  });
+part 'todo.freezed.dart';
 
-  final ObjectId id;
-  final String color;
-  final String time;
-  final String priority;
-  final String description;
-  final String title;
-  final bool synced;
-  final bool completed;
+part 'todo.g.dart';
 
-  @override
-  String toString() {
-    return 'Todo{id: $id, color: $color, time: $time, priority: $priority,'
-        ' description: $description, title: $title, synced: $synced,'
-        ' completed: $completed}';
-  }
+@freezed
+class Todo with _$Todo {
+  const factory Todo({
+    required String id,
+    required String title,
+    required String description,
+    String? color,
+    String? time,
+    String? lastModifiedAt,
+    String? priority,
+    bool? synced,
+    bool? completed,
+  }) = _Todo;
+
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 }

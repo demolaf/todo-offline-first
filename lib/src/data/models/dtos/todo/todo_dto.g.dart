@@ -15,6 +15,7 @@ _TodoDTO _$TodoDTOFromJson(Map<String, dynamic> json) => _TodoDTO()
   ..priority = json['priority'] as String
   ..description = json['description'] as String
   ..title = json['title'] as String
+  ..lastModifiedAt = json['lastModifiedAt'] as String
   ..synced = json['synced'] as bool
   ..completed = json['completed'] as bool;
 
@@ -25,6 +26,7 @@ Map<String, dynamic> _$TodoDTOToJson(_TodoDTO instance) => <String, dynamic>{
       'priority': instance.priority,
       'description': instance.description,
       'title': instance.title,
+      'lastModifiedAt': instance.lastModifiedAt,
       'synced': instance.synced,
       'completed': instance.completed,
     };
@@ -41,6 +43,7 @@ class TodoDTO extends _TodoDTO with RealmEntity, RealmObjectBase, RealmObject {
     String priority,
     String description,
     String title,
+    String lastModifiedAt,
     bool synced,
     bool completed,
   ) {
@@ -50,6 +53,7 @@ class TodoDTO extends _TodoDTO with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'priority', priority);
     RealmObjectBase.set(this, 'description', description);
     RealmObjectBase.set(this, 'title', title);
+    RealmObjectBase.set(this, 'lastModifiedAt', lastModifiedAt);
     RealmObjectBase.set(this, 'synced', synced);
     RealmObjectBase.set(this, 'completed', completed);
   }
@@ -89,6 +93,12 @@ class TodoDTO extends _TodoDTO with RealmEntity, RealmObjectBase, RealmObject {
   set title(String value) => throw RealmUnsupportedSetError();
 
   @override
+  String get lastModifiedAt =>
+      RealmObjectBase.get<String>(this, 'lastModifiedAt') as String;
+  @override
+  set lastModifiedAt(String value) => throw RealmUnsupportedSetError();
+
+  @override
   bool get synced => RealmObjectBase.get<bool>(this, 'synced') as bool;
   @override
   set synced(bool value) => RealmObjectBase.set(this, 'synced', value);
@@ -116,6 +126,7 @@ class TodoDTO extends _TodoDTO with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('priority', RealmPropertyType.string),
       SchemaProperty('description', RealmPropertyType.string),
       SchemaProperty('title', RealmPropertyType.string),
+      SchemaProperty('lastModifiedAt', RealmPropertyType.string),
       SchemaProperty('synced', RealmPropertyType.bool),
       SchemaProperty('completed', RealmPropertyType.bool),
     ]);
