@@ -67,8 +67,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    // final width = MediaQuery.of(context).size.width;
-    // final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         // titleSpacing: 20,
@@ -84,18 +82,24 @@ class _HomeViewState extends State<HomeView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Icon(
-                  Icons.person,
-                ),
-                const Icon(
-                  Icons.settings_rounded,
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.person,
+                  ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.cloud),
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.settings_rounded,
+                  ),
+                ),
+                IconButton(
                   onPressed: () {
                     Navigator.of(context)
                         .push(QueuesView.route(bloc: context.read<HomeBloc>()));
                   },
+                  icon: const Icon(Icons.cloud),
                 ),
                 IconButton(
                   icon: const Icon(Icons.perm_device_info_rounded),
