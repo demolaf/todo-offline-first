@@ -21,7 +21,7 @@ class TodoRepositoryImpl implements TodoRepository {
   }
 
   @override
-  Future<void> createTodo({required Todo todo}) async {
+  Future<void> upsertTodo({required Todo todo}) async {
     await _todoApi.createTodo(
       TodoDTO(
         ObjectId.fromHexString(todo.id),
@@ -30,8 +30,9 @@ class TodoRepositoryImpl implements TodoRepository {
         todo.priority!,
         todo.description,
         todo.title,
+        todo.lastModifiedAt!,
         false,
-        false,
+        todo.completed ?? false,
       ),
     );
   }

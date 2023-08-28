@@ -3,15 +3,15 @@ part of 'create_todo_bloc.dart';
 @freezed
 class CreateTodoState with _$CreateTodoState {
   const factory CreateTodoState({
-    Todo? newTodo,
+    Todo? todo,
   }) = _CreateTodoState;
 
   const factory CreateTodoState.loading({
-    Todo? newTodo,
+    Todo? todo,
   }) = CreatingTodoLoading;
 
-  const factory CreateTodoState.creatingTodo({
+  const factory CreateTodoState.savingTodo({
     required ProcessingState processingState,
-    Todo? newTodo,
-  }) = CreatingTodo;
+    Todo? todo,
+  }) = SavingTodo;
 }

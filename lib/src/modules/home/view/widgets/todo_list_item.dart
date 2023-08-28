@@ -1,7 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:todo_bloc/src/core/global_imports.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
-import 'package:todo_bloc/src/modules/view_todo/view/view_todo.dart';
+import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
 
 class TodoListItem extends StatelessWidget {
   const TodoListItem({
@@ -15,7 +15,12 @@ class TodoListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(ViewTodoView.route(id: todo.id));
+        Navigator.of(context).push(
+          CreateTodoView.route(
+            todoOperationType: TodoOperationType.edit,
+            todo: todo,
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 24),

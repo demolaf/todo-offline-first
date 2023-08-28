@@ -110,12 +110,14 @@ class QueueService {
     final now = DateTime.now().toIso8601String();
 
     try {
-      final todo = await _localTodoApi.getTodo(unSyncedQueue.todoId);
+      final unSyncedTodo = await _localTodoApi.getTodo(unSyncedQueue.todoId);
 
-      await _remoteTodoApi.updateTodo(todo!);
+      await _remoteTodoApi.updateTodo(unSyncedTodo!);
       await _remoteQueueApi.createQueue(
         unSyncedQueue.copyWith(lastSyncedAt: now),
       );
+
+      await markTodoAsSynced(unSyncedTodo);
       await markQueueAsSynced(unSyncedQueue);
     } catch (e) {
       developer.log(e.toString());
@@ -127,14 +129,15 @@ class QueueService {
     final now = DateTime.now().toIso8601String();
 
     try {
-      final todo = await _localTodoApi.getTodo(unSyncedQueue.todoId);
+      final unSyncedTodo = await _localTodoApi.getTodo(unSyncedQueue.todoId);
 
-      if (todo != null) {
-        await _remoteTodoApi.createTodo(todo.copyWith(synced: true));
+      if (unSyncedTodo != null) {
+        await _remoteTodoApi.createTodo(unSyncedTodo.copyWith(synced: true));
         await _remoteQueueApi.createQueue(
           unSyncedQueue.copyWith(lastSyncedAt: now),
         );
 
+        await markTodoAsSynced(unSyncedTodo);
         await markQueueAsSynced(unSyncedQueue);
       }
     } catch (e) {
@@ -213,19 +216,40 @@ class QueueService {
   }
 
   Future<void> _handlePullSyncForUpdateOperation(QueueDTO queue) async {
-    // 1. Use the todo_id from the queue in remote
-    // 2. Use the todo_id to fetch the todo_object in remote
-    // 3. Update the todo_object in local
-    // 4. Do I need to mark synced or something here?
-
     try {
-      final todo = await _remoteTodoApi.getTodo(queue.todoId);
+      final todoFromRemote = await _remoteTodoApi.getTodo(queue.todoId);
 
-      if (todo != null) {
-        developer.log('Found todo, updating & storing ${queue.todoId}');
-        await _localTodoApi.updateTodo(todo);
-        await _localQueueApi.createQueue(queue);
+      if (todoFromRemote == null) {
+        return;
       }
+
+      final todoFromRemoteDate =
+          DateTime.tryParse(todoFromRemote.lastModifiedAt);
+
+      if (todoFromRemoteDate == null) {
+        return;
+      }
+
+      final todoFromLocal =
+          await _localTodoApi.getTodo(todoFromRemote.id.hexString);
+
+      if (todoFromLocal == null) {
+        return;
+      }
+
+      final todoFromLocalDate = DateTime.tryParse(todoFromLocal.lastModifiedAt);
+
+      if (todoFromLocalDate == null) {
+        return;
+      }
+
+      if (todoFromRemoteDate.isAfter(todoFromLocalDate)) {
+        developer.log('Found todo, updating & storing ${queue.todoId}');
+        // update todo_object in local because the one in local is outdated
+        await _localTodoApi.updateTodo(todoFromRemote);
+      }
+
+      await _localQueueApi.createQueue(queue);
     } catch (e) {
       developer.log(e.toString());
       rethrow;
@@ -261,6 +285,21 @@ class QueueService {
     }
   }
 
+  // TODO(demolaf): ensure this works the idea is to show synced state in ui
+  // if todo_object was modified you have to mark it as unsynced
+  // until pushed
+  // if todo_object was created you have to mark it as synced after push
+  Future<void> markTodoAsSynced(TodoDTO todo) async {
+    try {
+      await _localTodoApi.updateTodoLocal(() {
+        todo.synced = true;
+      });
+    } catch (e) {
+      developer.log(e.toString());
+      rethrow;
+    }
+  }
+
   /// Check if need to sync queues
   Future<void> pushSyncIfNeeded() async {
     try {
@@ -277,7 +316,7 @@ class QueueService {
   }
 
   /// We listen here because we're using firebase and it lets us know through
-  /// a stream subscription thzat a change has been made in queues doc
+  /// a stream subscription that a change has been made in queues doc
   ///
   /// In a REST API we would need use another method
   /// 1. Web hooks

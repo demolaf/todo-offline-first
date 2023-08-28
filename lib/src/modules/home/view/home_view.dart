@@ -248,7 +248,9 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(CreateTodoView.route());
+          Navigator.of(context).push(
+            CreateTodoView.route(todoOperationType: TodoOperationType.create),
+          );
         },
         child: const Icon(
           Icons.add,

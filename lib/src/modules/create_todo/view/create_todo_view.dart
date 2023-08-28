@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,22 +10,43 @@ import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
 import 'package:todo_bloc/src/modules/create_todo/bloc/create_todo_bloc.dart';
 
-class CreateTodoView extends StatefulWidget {
-  const CreateTodoView({super.key});
+enum TodoOperationType {
+  create,
+  edit,
+}
 
-  static Route<CreateTodoView> route() {
+class CreateTodoView extends StatefulWidget {
+  const CreateTodoView({
+    required this.todoOperationType,
+    this.todo,
+    super.key,
+  });
+
+  static Route<CreateTodoView> route({
+    required TodoOperationType todoOperationType,
+    Todo? todo,
+  }) {
     return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
           create: (context) => CreateTodoBloc(
             todoSyncRepository: context.read<TodoSyncRepository>(),
             todoRepository: context.read<TodoRepository>(),
-          )..add(const CreateTodoInitializationRequested()),
-          child: const CreateTodoView(),
+          )..add(
+              CreateTodoInitializationRequested(
+                todoOperationType: todoOperationType,
+                id: todo?.id,
+              ),
+            ),
+          child:
+              CreateTodoView(todoOperationType: todoOperationType, todo: todo),
         );
       },
     );
   }
+
+  final TodoOperationType todoOperationType;
+  final Todo? todo;
 
   @override
   State<CreateTodoView> createState() => _CreateTodoViewState();
@@ -40,9 +62,15 @@ class _CreateTodoViewState extends State<CreateTodoView> {
   @override
   void initState() {
     super.initState();
-    titleEditingController = TextEditingController();
+
+    initializeTextEditingControllers();
+  }
+
+  void initializeTextEditingControllers() {
+    titleEditingController = TextEditingController(text: widget.todo?.title);
     titleEditingFocusNode = FocusNode();
-    descriptionEditingController = TextEditingController();
+    descriptionEditingController =
+        TextEditingController(text: widget.todo?.description);
     descriptionEditingFocusNode = FocusNode();
   }
 
@@ -61,13 +89,27 @@ class _CreateTodoViewState extends State<CreateTodoView> {
       appBar: AppBar(
         leading: BackButton(
           onPressed: () {
-            context.read<CreateTodoBloc>().add(const SaveTodo());
+            context
+                .read<CreateTodoBloc>()
+                .add(SaveTodo(todoOperationType: widget.todoOperationType));
 
             Navigator.of(context).pop();
           },
         ),
-        // TODO(demolaf): replace with enums
-        title: const Text('Create Todo'),
+        title: Text('${widget.todoOperationType.name.capitalize} Todo'),
+        actions: [
+          if (widget.todoOperationType == TodoOperationType.edit)
+            Padding(
+              padding: const EdgeInsets.only(right: 24),
+              child: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  context.read<CreateTodoBloc>().add(const DeleteTodo());
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
@@ -97,8 +139,8 @@ class _CreateTodoViewState extends State<CreateTodoView> {
                               ),
                               onChanged: (text) {
                                 context.read<CreateTodoBloc>().add(
-                                      UpdateTodo(
-                                        todo: state.newTodo!.copyWith(
+                                      TodoDataChanged(
+                                        todo: state.todo!.copyWith(
                                           title: text,
                                         ),
                                       ),
@@ -125,16 +167,16 @@ class _CreateTodoViewState extends State<CreateTodoView> {
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             BlocSelector<CreateTodoBloc, CreateTodoState,
-                                CreatingTodo?>(
+                                SavingTodo?>(
                               selector: (state) {
-                                if (state is CreatingTodo) {
+                                if (state is SavingTodo) {
                                   return state;
                                 }
 
                                 return null;
                               },
                               builder: (context, state) {
-                                if (state is! CreatingTodo) {
+                                if (state is! SavingTodo) {
                                   return const SizedBox.shrink();
                                 }
                                 String message;
@@ -172,8 +214,8 @@ class _CreateTodoViewState extends State<CreateTodoView> {
                                 Theme.of(context).colorScheme.secondary,
                             onChanged: (text) {
                               context.read<CreateTodoBloc>().add(
-                                    UpdateTodo(
-                                      todo: state.newTodo!.copyWith(
+                                    TodoDataChanged(
+                                      todo: state.todo!.copyWith(
                                         description: text,
                                       ),
                                     ),
@@ -336,6 +378,13 @@ class _ExtrasMenuState extends State<ExtrasMenu>
   void initState() {
     super.initState();
 
+    final todo = context.read<CreateTodoBloc>().getTodo();
+
+    if (todo != null) {
+      selectedDateTime = DateTime.tryParse(todo.time ?? '');
+      selectedPriority = todo.priority?.toTodoPriority();
+    }
+
     _fadeAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
@@ -385,8 +434,8 @@ class _ExtrasMenuState extends State<ExtrasMenu>
 
                     debugPrint(selectedColor?.value.toString());
                     context.read<CreateTodoBloc>().add(
-                          UpdateTodo(
-                            todo: state.newTodo!.copyWith(
+                          TodoDataChanged(
+                            todo: state.todo!.copyWith(
                               color: selectedColor.toString(),
                             ),
                           ),
@@ -404,7 +453,7 @@ class _ExtrasMenuState extends State<ExtrasMenu>
                 const SizedBox(height: 24),
                 GestureDetector(
                   onTap: () {
-                    _showDatePicker(context, state.newTodo!);
+                    _showDatePicker(context, state.todo!);
                   },
                   child: const Icon(
                     Icons.access_time_rounded,
@@ -423,8 +472,8 @@ class _ExtrasMenuState extends State<ExtrasMenu>
                     });
 
                     context.read<CreateTodoBloc>().add(
-                          UpdateTodo(
-                            todo: state.newTodo!.copyWith(
+                          TodoDataChanged(
+                            todo: state.todo!.copyWith(
                               priority: selectedPriority!.toShortString(),
                             ),
                           ),
@@ -459,7 +508,7 @@ class _ExtrasMenuState extends State<ExtrasMenu>
               });
 
               context.read<CreateTodoBloc>().add(
-                    UpdateTodo(
+                    TodoDataChanged(
                       todo: todo.copyWith(
                         time: selectedDateTime?.toIso8601String(),
                       ),
@@ -472,123 +521,3 @@ class _ExtrasMenuState extends State<ExtrasMenu>
     );
   }
 }
-
-// Column(
-//   crossAxisAlignment: CrossAxisAlignment.start,
-//   children: [
-//     const Text('Choose a color or use default priority color'),
-//     const SizedBox(height: 16),
-//     Row(
-//       children: [
-//         Container(
-//           width: 24,
-//           height: 24,
-//           decoration: const ShapeDecoration(
-//             color: Colors.red,
-//             shape: CircleBorder(),
-//           ),
-//         ),
-//         const SizedBox(width: 16),
-//         Container(
-//           width: 24,
-//           height: 24,
-//           decoration: const ShapeDecoration(
-//             color: Colors.green,
-//             shape: CircleBorder(),
-//           ),
-//         ),
-//         const SizedBox(width: 16),
-//         Container(
-//           width: 24,
-//           height: 24,
-//           decoration: const ShapeDecoration(
-//             color: Colors.blue,
-//             shape: CircleBorder(),
-//           ),
-//         ),
-//         const SizedBox(width: 16),
-//         Container(
-//           width: 24,
-//           height: 24,
-//           decoration: const ShapeDecoration(
-//             color: Colors.yellow,
-//             shape: CircleBorder(),
-//           ),
-//         ),
-//         const SizedBox(width: 16),
-//         GestureDetector(
-//           onTap: () {},
-//           child: Container(
-//             width: 24,
-//             height: 24,
-//             decoration: const ShapeDecoration(
-//               color: Colors.grey,
-//               shape: CircleBorder(),
-//             ),
-//             child: const Icon(
-//               Icons.add,
-//               size: 12,
-//             ),
-//           ),
-//         ),
-//       ],
-//     ),
-//   ],
-// ),
-// const SizedBox(height: 24),
-// const Divider(),
-// const SizedBox(height: 24),
-// GestureDetector(
-//   onTap: () {
-//     _showDatePicker(context);
-//   },
-//   child: Text(
-//     selectedDateTime?.formatDateAndTime() ?? 'Choose a time',
-//   ),
-// ),
-// const SizedBox(height: 24),
-// const Divider(),
-// const SizedBox(height: 24),
-// Column(
-//   crossAxisAlignment: CrossAxisAlignment.start,
-//   children: [
-//     const Text('Priority'),
-//     const SizedBox(height: 16),
-//     Wrap(
-//       crossAxisAlignment: WrapCrossAlignment.center,
-//       children: [
-//         ...TodoPriority.values.map(
-//           (priority) => Padding(
-//             padding: const EdgeInsets.only(right: 12),
-//             child: Chip(
-//               label: Text(
-//                 priority.name.capitalize,
-//               ),
-//               backgroundColor: priority.toColor(),
-//             ),
-//           ),
-//         ),
-//         GestureDetector(
-//           onTap: () {},
-//           child: Container(
-//             width: 24,
-//             height: 24,
-//             decoration: const ShapeDecoration(
-//               color: Colors.grey,
-//               shape: CircleBorder(),
-//             ),
-//             child: const Icon(
-//               Icons.add,
-//               size: 12,
-//             ),
-//           ),
-//         ),
-//       ],
-//     ),
-//   ],
-// ),
-// const SizedBox(height: 24),
-// const Divider(),
-// const SizedBox(height: 24),
-// const SizedBox(height: 24),
-// const Divider(),

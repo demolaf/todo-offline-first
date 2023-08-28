@@ -12,6 +12,7 @@ class Todo with _$Todo {
     required String description,
     String? color,
     String? time,
+    String? lastModifiedAt,
     String? priority,
     bool? synced,
     bool? completed,

@@ -8,14 +8,20 @@ abstract class CreateTodoEvent extends Equatable {
 }
 
 class CreateTodoInitializationRequested extends CreateTodoEvent {
-  const CreateTodoInitializationRequested();
+  const CreateTodoInitializationRequested({
+    required this.todoOperationType,
+    this.id,
+  });
+
+  final TodoOperationType todoOperationType;
+  final String? id;
 
   @override
   List<Object> get props => [];
 }
 
-class UpdateTodo extends CreateTodoEvent {
-  const UpdateTodo({required this.todo});
+class TodoDataChanged extends CreateTodoEvent {
+  const TodoDataChanged({required this.todo});
 
   final Todo todo;
 
@@ -24,5 +30,17 @@ class UpdateTodo extends CreateTodoEvent {
 }
 
 class SaveTodo extends CreateTodoEvent {
-  const SaveTodo();
+  const SaveTodo({required this.todoOperationType});
+
+  final TodoOperationType todoOperationType;
+
+  @override
+  List<Object> get props => [];
+}
+
+class DeleteTodo extends CreateTodoEvent {
+  const DeleteTodo();
+
+  @override
+  List<Object> get props => [];
 }

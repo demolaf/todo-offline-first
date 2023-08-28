@@ -26,6 +26,7 @@ extension TodoDTOJsonParser on TodoDTO {
       todo.priority,
       todo.description,
       todo.title,
+      todo.lastModifiedAt,
       todo.synced,
       todo.completed,
     );
@@ -42,6 +43,7 @@ extension TodoDTOJsonParser on TodoDTO {
     String? priority,
     String? description,
     String? title,
+    String? lastModifiedAt,
     bool? synced,
     bool? completed,
   }) {
@@ -52,6 +54,7 @@ extension TodoDTOJsonParser on TodoDTO {
       priority ?? this.priority,
       description ?? this.description,
       title ?? this.title,
+      lastModifiedAt ?? this.lastModifiedAt,
       synced ?? this.synced,
       completed ?? this.completed,
     );
@@ -69,6 +72,7 @@ class _TodoDTO {
   late final String priority;
   late final String description;
   late final String title;
+  late final String lastModifiedAt;
   late bool synced;
   late bool completed;
 

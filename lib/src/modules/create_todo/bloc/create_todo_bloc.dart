@@ -7,6 +7,7 @@ import 'package:todo_bloc/src/data/models/domains/todo.dart';
 import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
+import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
 
 part 'create_todo_event.dart';
 
@@ -21,62 +22,92 @@ class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
   })  : _todoRepository = todoRepository,
         _todoSyncRepository = todoSyncRepository,
         super(const CreateTodoState.loading()) {
-    on<CreateTodoInitializationRequested>((event, emit) {
-      emit(
-        state.copyWith(
-          newTodo: Todo(
-            id: todoRepository.getGeneratedTodoId(),
-            title: '',
-            description: '',
-            synced: false,
-            completed: false,
-          ),
-        ),
-      );
+    on<CreateTodoInitializationRequested>((event, emit) async {
+      switch (event.todoOperationType) {
+        case TodoOperationType.create:
+          emit(
+            state.copyWith(
+              todo: Todo(
+                id: todoRepository.getGeneratedTodoId(),
+                title: '',
+                description: '',
+                synced: false,
+                completed: false,
+              ),
+            ),
+          );
+        case TodoOperationType.edit:
+          final todo = await _todoRepository.getTodo(event.id!);
+          emit(
+            state.copyWith(
+              todo: todo,
+            ),
+          );
+      }
     });
 
-    on<UpdateTodo>((event, emit) async {
-      emit(state.copyWith(newTodo: event.todo));
+    on<TodoDataChanged>((event, emit) async {
+      emit(state.copyWith(todo: event.todo));
     });
 
     on<SaveTodo>((event, emit) async {
-      if (state.newTodo!.title.isEmpty && state.newTodo!.description.isEmpty) {
+      if (state.todo!.title.isEmpty && state.todo!.description.isEmpty) {
         return;
       }
 
       try {
         emit(
-          CreateTodoState.creatingTodo(
+          CreateTodoState.savingTodo(
             processingState: ProcessingState.processing,
-            newTodo: state.newTodo,
+            todo: state.todo,
           ),
         );
 
-        await _todoRepository.createTodo(todo: state.newTodo!);
+        await _todoRepository.upsertTodo(todo: state.todo!);
 
-        await _todoSyncRepository.createQueueForTodo(
-          operationType: QueueOperationType.create,
-          id: state.newTodo!.id,
-        );
+        switch (event.todoOperationType) {
+          case TodoOperationType.create:
+            await _todoSyncRepository.createQueueForTodo(
+              operationType: QueueOperationType.create,
+              id: state.todo!.id,
+            );
+          case TodoOperationType.edit:
+            await _todoSyncRepository.createQueueForTodo(
+              operationType: QueueOperationType.update,
+              id: state.todo!.id,
+            );
+        }
 
         emit(
-          CreateTodoState.creatingTodo(
+          CreateTodoState.savingTodo(
             processingState: ProcessingState.success,
-            newTodo: state.newTodo,
+            todo: state.todo,
           ),
         );
       } catch (e) {
         developer.log('HERE: $e');
         emit(
-          CreateTodoState.creatingTodo(
+          CreateTodoState.savingTodo(
             processingState: ProcessingState.failure,
-            newTodo: state.newTodo,
+            todo: state.todo,
           ),
         );
       }
+    });
+
+    on<DeleteTodo>((event, emit) async {
+      _todoRepository.deleteTodo(state.todo!.id);
+      await _todoSyncRepository.createQueueForTodo(
+        operationType: QueueOperationType.delete,
+        id: state.todo!.id,
+      );
     });
   }
 
   final TodoRepository _todoRepository;
   final TodoSyncRepository _todoSyncRepository;
+
+  Todo? getTodo() {
+    return state.todo;
+  }
 }

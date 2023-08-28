@@ -16,29 +16,27 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CreateTodoState {
-  Todo? get newTodo => throw _privateConstructorUsedError;
+  Todo? get todo => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Todo? newTodo) $default, {
-    required TResult Function(Todo? newTodo) loading,
-    required TResult Function(Todo? newTodo, ProcessingState processingState)
-        creatingTodo,
+    TResult Function(Todo? todo) $default, {
+    required TResult Function(Todo? todo) loading,
+    required TResult Function(ProcessingState processingState, Todo? todo)
+        savingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Todo? newTodo)? $default, {
-    TResult? Function(Todo? newTodo)? loading,
-    TResult? Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult? Function(Todo? todo)? $default, {
+    TResult? Function(Todo? todo)? loading,
+    TResult? Function(ProcessingState processingState, Todo? todo)? savingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Todo? newTodo)? $default, {
-    TResult Function(Todo? newTodo)? loading,
-    TResult Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult Function(Todo? todo)? $default, {
+    TResult Function(Todo? todo)? loading,
+    TResult Function(ProcessingState processingState, Todo? todo)? savingTodo,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -46,21 +44,21 @@ mixin _$CreateTodoState {
   TResult map<TResult extends Object?>(
     TResult Function(_CreateTodoState value) $default, {
     required TResult Function(CreatingTodoLoading value) loading,
-    required TResult Function(CreatingTodo value) creatingTodo,
+    required TResult Function(SavingTodo value) savingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_CreateTodoState value)? $default, {
     TResult? Function(CreatingTodoLoading value)? loading,
-    TResult? Function(CreatingTodo value)? creatingTodo,
+    TResult? Function(SavingTodo value)? savingTodo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_CreateTodoState value)? $default, {
     TResult Function(CreatingTodoLoading value)? loading,
-    TResult Function(CreatingTodo value)? creatingTodo,
+    TResult Function(SavingTodo value)? savingTodo,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -76,9 +74,9 @@ abstract class $CreateTodoStateCopyWith<$Res> {
           CreateTodoState value, $Res Function(CreateTodoState) then) =
       _$CreateTodoStateCopyWithImpl<$Res, CreateTodoState>;
   @useResult
-  $Res call({Todo? newTodo});
+  $Res call({Todo? todo});
 
-  $TodoCopyWith<$Res>? get newTodo;
+  $TodoCopyWith<$Res>? get todo;
 }
 
 /// @nodoc
@@ -94,25 +92,25 @@ class _$CreateTodoStateCopyWithImpl<$Res, $Val extends CreateTodoState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? newTodo = freezed,
+    Object? todo = freezed,
   }) {
     return _then(_value.copyWith(
-      newTodo: freezed == newTodo
-          ? _value.newTodo
-          : newTodo // ignore: cast_nullable_to_non_nullable
+      todo: freezed == todo
+          ? _value.todo
+          : todo // ignore: cast_nullable_to_non_nullable
               as Todo?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $TodoCopyWith<$Res>? get newTodo {
-    if (_value.newTodo == null) {
+  $TodoCopyWith<$Res>? get todo {
+    if (_value.todo == null) {
       return null;
     }
 
-    return $TodoCopyWith<$Res>(_value.newTodo!, (value) {
-      return _then(_value.copyWith(newTodo: value) as $Val);
+    return $TodoCopyWith<$Res>(_value.todo!, (value) {
+      return _then(_value.copyWith(todo: value) as $Val);
     });
   }
 }
@@ -125,10 +123,10 @@ abstract class _$$_CreateTodoStateCopyWith<$Res>
       __$$_CreateTodoStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Todo? newTodo});
+  $Res call({Todo? todo});
 
   @override
-  $TodoCopyWith<$Res>? get newTodo;
+  $TodoCopyWith<$Res>? get todo;
 }
 
 /// @nodoc
@@ -142,12 +140,12 @@ class __$$_CreateTodoStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? newTodo = freezed,
+    Object? todo = freezed,
   }) {
     return _then(_$_CreateTodoState(
-      newTodo: freezed == newTodo
-          ? _value.newTodo
-          : newTodo // ignore: cast_nullable_to_non_nullable
+      todo: freezed == todo
+          ? _value.todo
+          : todo // ignore: cast_nullable_to_non_nullable
               as Todo?,
     ));
   }
@@ -156,14 +154,14 @@ class __$$_CreateTodoStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_CreateTodoState implements _CreateTodoState {
-  const _$_CreateTodoState({this.newTodo});
+  const _$_CreateTodoState({this.todo});
 
   @override
-  final Todo? newTodo;
+  final Todo? todo;
 
   @override
   String toString() {
-    return 'CreateTodoState(newTodo: $newTodo)';
+    return 'CreateTodoState(todo: $todo)';
   }
 
   @override
@@ -171,11 +169,11 @@ class _$_CreateTodoState implements _CreateTodoState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_CreateTodoState &&
-            (identical(other.newTodo, newTodo) || other.newTodo == newTodo));
+            (identical(other.todo, todo) || other.todo == todo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, newTodo);
+  int get hashCode => Object.hash(runtimeType, todo);
 
   @JsonKey(ignore: true)
   @override
@@ -186,36 +184,34 @@ class _$_CreateTodoState implements _CreateTodoState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Todo? newTodo) $default, {
-    required TResult Function(Todo? newTodo) loading,
-    required TResult Function(Todo? newTodo, ProcessingState processingState)
-        creatingTodo,
+    TResult Function(Todo? todo) $default, {
+    required TResult Function(Todo? todo) loading,
+    required TResult Function(ProcessingState processingState, Todo? todo)
+        savingTodo,
   }) {
-    return $default(newTodo);
+    return $default(todo);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Todo? newTodo)? $default, {
-    TResult? Function(Todo? newTodo)? loading,
-    TResult? Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult? Function(Todo? todo)? $default, {
+    TResult? Function(Todo? todo)? loading,
+    TResult? Function(ProcessingState processingState, Todo? todo)? savingTodo,
   }) {
-    return $default?.call(newTodo);
+    return $default?.call(todo);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Todo? newTodo)? $default, {
-    TResult Function(Todo? newTodo)? loading,
-    TResult Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult Function(Todo? todo)? $default, {
+    TResult Function(Todo? todo)? loading,
+    TResult Function(ProcessingState processingState, Todo? todo)? savingTodo,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(newTodo);
+      return $default(todo);
     }
     return orElse();
   }
@@ -225,7 +221,7 @@ class _$_CreateTodoState implements _CreateTodoState {
   TResult map<TResult extends Object?>(
     TResult Function(_CreateTodoState value) $default, {
     required TResult Function(CreatingTodoLoading value) loading,
-    required TResult Function(CreatingTodo value) creatingTodo,
+    required TResult Function(SavingTodo value) savingTodo,
   }) {
     return $default(this);
   }
@@ -235,7 +231,7 @@ class _$_CreateTodoState implements _CreateTodoState {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_CreateTodoState value)? $default, {
     TResult? Function(CreatingTodoLoading value)? loading,
-    TResult? Function(CreatingTodo value)? creatingTodo,
+    TResult? Function(SavingTodo value)? savingTodo,
   }) {
     return $default?.call(this);
   }
@@ -245,7 +241,7 @@ class _$_CreateTodoState implements _CreateTodoState {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_CreateTodoState value)? $default, {
     TResult Function(CreatingTodoLoading value)? loading,
-    TResult Function(CreatingTodo value)? creatingTodo,
+    TResult Function(SavingTodo value)? savingTodo,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -256,10 +252,10 @@ class _$_CreateTodoState implements _CreateTodoState {
 }
 
 abstract class _CreateTodoState implements CreateTodoState {
-  const factory _CreateTodoState({final Todo? newTodo}) = _$_CreateTodoState;
+  const factory _CreateTodoState({final Todo? todo}) = _$_CreateTodoState;
 
   @override
-  Todo? get newTodo;
+  Todo? get todo;
   @override
   @JsonKey(ignore: true)
   _$$_CreateTodoStateCopyWith<_$_CreateTodoState> get copyWith =>
@@ -274,10 +270,10 @@ abstract class _$$CreatingTodoLoadingCopyWith<$Res>
       __$$CreatingTodoLoadingCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Todo? newTodo});
+  $Res call({Todo? todo});
 
   @override
-  $TodoCopyWith<$Res>? get newTodo;
+  $TodoCopyWith<$Res>? get todo;
 }
 
 /// @nodoc
@@ -291,12 +287,12 @@ class __$$CreatingTodoLoadingCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? newTodo = freezed,
+    Object? todo = freezed,
   }) {
     return _then(_$CreatingTodoLoading(
-      newTodo: freezed == newTodo
-          ? _value.newTodo
-          : newTodo // ignore: cast_nullable_to_non_nullable
+      todo: freezed == todo
+          ? _value.todo
+          : todo // ignore: cast_nullable_to_non_nullable
               as Todo?,
     ));
   }
@@ -305,14 +301,14 @@ class __$$CreatingTodoLoadingCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CreatingTodoLoading implements CreatingTodoLoading {
-  const _$CreatingTodoLoading({this.newTodo});
+  const _$CreatingTodoLoading({this.todo});
 
   @override
-  final Todo? newTodo;
+  final Todo? todo;
 
   @override
   String toString() {
-    return 'CreateTodoState.loading(newTodo: $newTodo)';
+    return 'CreateTodoState.loading(todo: $todo)';
   }
 
   @override
@@ -320,11 +316,11 @@ class _$CreatingTodoLoading implements CreatingTodoLoading {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CreatingTodoLoading &&
-            (identical(other.newTodo, newTodo) || other.newTodo == newTodo));
+            (identical(other.todo, todo) || other.todo == todo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, newTodo);
+  int get hashCode => Object.hash(runtimeType, todo);
 
   @JsonKey(ignore: true)
   @override
@@ -336,36 +332,34 @@ class _$CreatingTodoLoading implements CreatingTodoLoading {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Todo? newTodo) $default, {
-    required TResult Function(Todo? newTodo) loading,
-    required TResult Function(Todo? newTodo, ProcessingState processingState)
-        creatingTodo,
+    TResult Function(Todo? todo) $default, {
+    required TResult Function(Todo? todo) loading,
+    required TResult Function(ProcessingState processingState, Todo? todo)
+        savingTodo,
   }) {
-    return loading(newTodo);
+    return loading(todo);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Todo? newTodo)? $default, {
-    TResult? Function(Todo? newTodo)? loading,
-    TResult? Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult? Function(Todo? todo)? $default, {
+    TResult? Function(Todo? todo)? loading,
+    TResult? Function(ProcessingState processingState, Todo? todo)? savingTodo,
   }) {
-    return loading?.call(newTodo);
+    return loading?.call(todo);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Todo? newTodo)? $default, {
-    TResult Function(Todo? newTodo)? loading,
-    TResult Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult Function(Todo? todo)? $default, {
+    TResult Function(Todo? todo)? loading,
+    TResult Function(ProcessingState processingState, Todo? todo)? savingTodo,
     required TResult orElse(),
   }) {
     if (loading != null) {
-      return loading(newTodo);
+      return loading(todo);
     }
     return orElse();
   }
@@ -375,7 +369,7 @@ class _$CreatingTodoLoading implements CreatingTodoLoading {
   TResult map<TResult extends Object?>(
     TResult Function(_CreateTodoState value) $default, {
     required TResult Function(CreatingTodoLoading value) loading,
-    required TResult Function(CreatingTodo value) creatingTodo,
+    required TResult Function(SavingTodo value) savingTodo,
   }) {
     return loading(this);
   }
@@ -385,7 +379,7 @@ class _$CreatingTodoLoading implements CreatingTodoLoading {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_CreateTodoState value)? $default, {
     TResult? Function(CreatingTodoLoading value)? loading,
-    TResult? Function(CreatingTodo value)? creatingTodo,
+    TResult? Function(SavingTodo value)? savingTodo,
   }) {
     return loading?.call(this);
   }
@@ -395,7 +389,7 @@ class _$CreatingTodoLoading implements CreatingTodoLoading {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_CreateTodoState value)? $default, {
     TResult Function(CreatingTodoLoading value)? loading,
-    TResult Function(CreatingTodo value)? creatingTodo,
+    TResult Function(SavingTodo value)? savingTodo,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -406,11 +400,10 @@ class _$CreatingTodoLoading implements CreatingTodoLoading {
 }
 
 abstract class CreatingTodoLoading implements CreateTodoState {
-  const factory CreatingTodoLoading({final Todo? newTodo}) =
-      _$CreatingTodoLoading;
+  const factory CreatingTodoLoading({final Todo? todo}) = _$CreatingTodoLoading;
 
   @override
-  Todo? get newTodo;
+  Todo? get todo;
   @override
   @JsonKey(ignore: true)
   _$$CreatingTodoLoadingCopyWith<_$CreatingTodoLoading> get copyWith =>
@@ -418,113 +411,111 @@ abstract class CreatingTodoLoading implements CreateTodoState {
 }
 
 /// @nodoc
-abstract class _$$CreatingTodoCopyWith<$Res>
+abstract class _$$SavingTodoCopyWith<$Res>
     implements $CreateTodoStateCopyWith<$Res> {
-  factory _$$CreatingTodoCopyWith(
-          _$CreatingTodo value, $Res Function(_$CreatingTodo) then) =
-      __$$CreatingTodoCopyWithImpl<$Res>;
+  factory _$$SavingTodoCopyWith(
+          _$SavingTodo value, $Res Function(_$SavingTodo) then) =
+      __$$SavingTodoCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Todo? newTodo, ProcessingState processingState});
+  $Res call({ProcessingState processingState, Todo? todo});
 
   @override
-  $TodoCopyWith<$Res>? get newTodo;
+  $TodoCopyWith<$Res>? get todo;
 }
 
 /// @nodoc
-class __$$CreatingTodoCopyWithImpl<$Res>
-    extends _$CreateTodoStateCopyWithImpl<$Res, _$CreatingTodo>
-    implements _$$CreatingTodoCopyWith<$Res> {
-  __$$CreatingTodoCopyWithImpl(
-      _$CreatingTodo _value, $Res Function(_$CreatingTodo) _then)
+class __$$SavingTodoCopyWithImpl<$Res>
+    extends _$CreateTodoStateCopyWithImpl<$Res, _$SavingTodo>
+    implements _$$SavingTodoCopyWith<$Res> {
+  __$$SavingTodoCopyWithImpl(
+      _$SavingTodo _value, $Res Function(_$SavingTodo) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? newTodo = freezed,
     Object? processingState = null,
+    Object? todo = freezed,
   }) {
-    return _then(_$CreatingTodo(
-      newTodo: freezed == newTodo
-          ? _value.newTodo
-          : newTodo // ignore: cast_nullable_to_non_nullable
-              as Todo?,
+    return _then(_$SavingTodo(
       processingState: null == processingState
           ? _value.processingState
           : processingState // ignore: cast_nullable_to_non_nullable
               as ProcessingState,
+      todo: freezed == todo
+          ? _value.todo
+          : todo // ignore: cast_nullable_to_non_nullable
+              as Todo?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$CreatingTodo implements CreatingTodo {
-  const _$CreatingTodo({this.newTodo, required this.processingState});
+class _$SavingTodo implements SavingTodo {
+  const _$SavingTodo({required this.processingState, this.todo});
 
   @override
-  final Todo? newTodo;
-  @override
   final ProcessingState processingState;
+  @override
+  final Todo? todo;
 
   @override
   String toString() {
-    return 'CreateTodoState.creatingTodo(newTodo: $newTodo, processingState: $processingState)';
+    return 'CreateTodoState.savingTodo(processingState: $processingState, todo: $todo)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CreatingTodo &&
-            (identical(other.newTodo, newTodo) || other.newTodo == newTodo) &&
+            other is _$SavingTodo &&
             (identical(other.processingState, processingState) ||
-                other.processingState == processingState));
+                other.processingState == processingState) &&
+            (identical(other.todo, todo) || other.todo == todo));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, newTodo, processingState);
+  int get hashCode => Object.hash(runtimeType, processingState, todo);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$CreatingTodoCopyWith<_$CreatingTodo> get copyWith =>
-      __$$CreatingTodoCopyWithImpl<_$CreatingTodo>(this, _$identity);
+  _$$SavingTodoCopyWith<_$SavingTodo> get copyWith =>
+      __$$SavingTodoCopyWithImpl<_$SavingTodo>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Todo? newTodo) $default, {
-    required TResult Function(Todo? newTodo) loading,
-    required TResult Function(Todo? newTodo, ProcessingState processingState)
-        creatingTodo,
+    TResult Function(Todo? todo) $default, {
+    required TResult Function(Todo? todo) loading,
+    required TResult Function(ProcessingState processingState, Todo? todo)
+        savingTodo,
   }) {
-    return creatingTodo(newTodo, processingState);
+    return savingTodo(processingState, todo);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Todo? newTodo)? $default, {
-    TResult? Function(Todo? newTodo)? loading,
-    TResult? Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult? Function(Todo? todo)? $default, {
+    TResult? Function(Todo? todo)? loading,
+    TResult? Function(ProcessingState processingState, Todo? todo)? savingTodo,
   }) {
-    return creatingTodo?.call(newTodo, processingState);
+    return savingTodo?.call(processingState, todo);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Todo? newTodo)? $default, {
-    TResult Function(Todo? newTodo)? loading,
-    TResult Function(Todo? newTodo, ProcessingState processingState)?
-        creatingTodo,
+    TResult Function(Todo? todo)? $default, {
+    TResult Function(Todo? todo)? loading,
+    TResult Function(ProcessingState processingState, Todo? todo)? savingTodo,
     required TResult orElse(),
   }) {
-    if (creatingTodo != null) {
-      return creatingTodo(newTodo, processingState);
+    if (savingTodo != null) {
+      return savingTodo(processingState, todo);
     }
     return orElse();
   }
@@ -534,9 +525,9 @@ class _$CreatingTodo implements CreatingTodo {
   TResult map<TResult extends Object?>(
     TResult Function(_CreateTodoState value) $default, {
     required TResult Function(CreatingTodoLoading value) loading,
-    required TResult Function(CreatingTodo value) creatingTodo,
+    required TResult Function(SavingTodo value) savingTodo,
   }) {
-    return creatingTodo(this);
+    return savingTodo(this);
   }
 
   @override
@@ -544,9 +535,9 @@ class _$CreatingTodo implements CreatingTodo {
   TResult? mapOrNull<TResult extends Object?>(
     TResult? Function(_CreateTodoState value)? $default, {
     TResult? Function(CreatingTodoLoading value)? loading,
-    TResult? Function(CreatingTodo value)? creatingTodo,
+    TResult? Function(SavingTodo value)? savingTodo,
   }) {
-    return creatingTodo?.call(this);
+    return savingTodo?.call(this);
   }
 
   @override
@@ -554,26 +545,26 @@ class _$CreatingTodo implements CreatingTodo {
   TResult maybeMap<TResult extends Object?>(
     TResult Function(_CreateTodoState value)? $default, {
     TResult Function(CreatingTodoLoading value)? loading,
-    TResult Function(CreatingTodo value)? creatingTodo,
+    TResult Function(SavingTodo value)? savingTodo,
     required TResult orElse(),
   }) {
-    if (creatingTodo != null) {
-      return creatingTodo(this);
+    if (savingTodo != null) {
+      return savingTodo(this);
     }
     return orElse();
   }
 }
 
-abstract class CreatingTodo implements CreateTodoState {
-  const factory CreatingTodo(
-      {final Todo? newTodo,
-      required final ProcessingState processingState}) = _$CreatingTodo;
+abstract class SavingTodo implements CreateTodoState {
+  const factory SavingTodo(
+      {required final ProcessingState processingState,
+      final Todo? todo}) = _$SavingTodo;
 
-  @override
-  Todo? get newTodo;
   ProcessingState get processingState;
   @override
+  Todo? get todo;
+  @override
   @JsonKey(ignore: true)
-  _$$CreatingTodoCopyWith<_$CreatingTodo> get copyWith =>
+  _$$SavingTodoCopyWith<_$SavingTodo> get copyWith =>
       throw _privateConstructorUsedError;
 }

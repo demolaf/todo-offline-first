@@ -25,6 +25,7 @@ mixin _$Todo {
   String get description => throw _privateConstructorUsedError;
   String? get color => throw _privateConstructorUsedError;
   String? get time => throw _privateConstructorUsedError;
+  String? get lastModifiedAt => throw _privateConstructorUsedError;
   String? get priority => throw _privateConstructorUsedError;
   bool? get synced => throw _privateConstructorUsedError;
   bool? get completed => throw _privateConstructorUsedError;
@@ -45,6 +46,7 @@ abstract class $TodoCopyWith<$Res> {
       String description,
       String? color,
       String? time,
+      String? lastModifiedAt,
       String? priority,
       bool? synced,
       bool? completed});
@@ -68,6 +70,7 @@ class _$TodoCopyWithImpl<$Res, $Val extends Todo>
     Object? description = null,
     Object? color = freezed,
     Object? time = freezed,
+    Object? lastModifiedAt = freezed,
     Object? priority = freezed,
     Object? synced = freezed,
     Object? completed = freezed,
@@ -92,6 +95,10 @@ class _$TodoCopyWithImpl<$Res, $Val extends Todo>
       time: freezed == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedAt: freezed == lastModifiedAt
+          ? _value.lastModifiedAt
+          : lastModifiedAt // ignore: cast_nullable_to_non_nullable
               as String?,
       priority: freezed == priority
           ? _value.priority
@@ -121,6 +128,7 @@ abstract class _$$_TodoCopyWith<$Res> implements $TodoCopyWith<$Res> {
       String description,
       String? color,
       String? time,
+      String? lastModifiedAt,
       String? priority,
       bool? synced,
       bool? completed});
@@ -140,6 +148,7 @@ class __$$_TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res, _$_Todo>
     Object? description = null,
     Object? color = freezed,
     Object? time = freezed,
+    Object? lastModifiedAt = freezed,
     Object? priority = freezed,
     Object? synced = freezed,
     Object? completed = freezed,
@@ -164,6 +173,10 @@ class __$$_TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res, _$_Todo>
       time: freezed == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedAt: freezed == lastModifiedAt
+          ? _value.lastModifiedAt
+          : lastModifiedAt // ignore: cast_nullable_to_non_nullable
               as String?,
       priority: freezed == priority
           ? _value.priority
@@ -190,6 +203,7 @@ class _$_Todo implements _Todo {
       required this.description,
       this.color,
       this.time,
+      this.lastModifiedAt,
       this.priority,
       this.synced,
       this.completed});
@@ -207,6 +221,8 @@ class _$_Todo implements _Todo {
   @override
   final String? time;
   @override
+  final String? lastModifiedAt;
+  @override
   final String? priority;
   @override
   final bool? synced;
@@ -215,7 +231,7 @@ class _$_Todo implements _Todo {
 
   @override
   String toString() {
-    return 'Todo(id: $id, title: $title, description: $description, color: $color, time: $time, priority: $priority, synced: $synced, completed: $completed)';
+    return 'Todo(id: $id, title: $title, description: $description, color: $color, time: $time, lastModifiedAt: $lastModifiedAt, priority: $priority, synced: $synced, completed: $completed)';
   }
 
   @override
@@ -229,6 +245,8 @@ class _$_Todo implements _Todo {
                 other.description == description) &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.time, time) || other.time == time) &&
+            (identical(other.lastModifiedAt, lastModifiedAt) ||
+                other.lastModifiedAt == lastModifiedAt) &&
             (identical(other.priority, priority) ||
                 other.priority == priority) &&
             (identical(other.synced, synced) || other.synced == synced) &&
@@ -239,7 +257,7 @@ class _$_Todo implements _Todo {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, title, description, color,
-      time, priority, synced, completed);
+      time, lastModifiedAt, priority, synced, completed);
 
   @JsonKey(ignore: true)
   @override
@@ -262,6 +280,7 @@ abstract class _Todo implements Todo {
       required final String description,
       final String? color,
       final String? time,
+      final String? lastModifiedAt,
       final String? priority,
       final bool? synced,
       final bool? completed}) = _$_Todo;
@@ -278,6 +297,8 @@ abstract class _Todo implements Todo {
   String? get color;
   @override
   String? get time;
+  @override
+  String? get lastModifiedAt;
   @override
   String? get priority;
   @override
