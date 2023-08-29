@@ -1,5 +1,5 @@
 # Project Based
-/lib/firebase_options.dart
+api_keys.json
 
 # Miscellaneous
 *.class
