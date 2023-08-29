@@ -150,6 +150,14 @@ void main() {
       verifyNoMoreInteractions(remoteTodoApi);
     });
 
+    test('if no unsynced queues then return', () async {
+      when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([]);
+
+      await sut.needToPush();
+
+      verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
+    });
+
     test('if queue operation is create', () async {
       when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([queue]);
       when(() => queue.operationType)
@@ -238,6 +246,14 @@ void main() {
       verifyNoMoreInteractions(localTodoApi);
       verifyNoMoreInteractions(remoteQueueApi);
       verifyNoMoreInteractions(remoteTodoApi);
+    });
+
+    test('if no queues in remote then return', () async {
+      when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => []);
+
+      await sut.needToPull();
+
+      verify(() => remoteQueueApi.getQueues()).called(1);
     });
 
     test('if queue operation is create', () async {

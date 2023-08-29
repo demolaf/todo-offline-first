@@ -27,13 +27,21 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
   final LocalQueueApi _localQueueApi;
 
   @override
-  Future<void> needToPush() {
-    return _pushSyncIfNeeded();
+  Future<void> needToPush() async {
+    try {
+      await _pushUnSyncedQueuesAndTodosToRemote();
+    } catch (e) {
+      developer.log(e.toString());
+    }
   }
 
   @override
-  Future<void> needToPull() {
-    return _pullSyncIfNeeded();
+  Future<void> needToPull() async {
+    try {
+      await _pullQueuesAndTodosFromRemote();
+    } catch (e) {
+      developer.log(e.toString());
+    }
   }
 
   @override
@@ -99,6 +107,10 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     try {
       // Query not synced queues
       final unSyncedQueues = _localQueueApi.fetchUnSyncedQueues();
+
+      if (unSyncedQueues.isEmpty) {
+        return;
+      }
 
       for (final unSyncedQueue in unSyncedQueues) {
         // Get todo_object on which operation is to be carried out
@@ -183,12 +195,13 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
 
     try {
       final queuesInRemote = await _remoteQueueApi.getQueues();
-      final queuesInLocal = await _localQueueApi.getQueues();
 
       if (queuesInRemote.isEmpty) {
         developer.log('No queues to pull');
         return;
       }
+
+      final queuesInLocal = await _localQueueApi.getQueues();
 
       for (final queue in queuesInLocal) {
         checked[queue.id.hexString] = false;
@@ -327,35 +340,6 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     } catch (e) {
       developer.log(e.toString());
       rethrow;
-    }
-  }
-
-  /// Check if need to sync queues
-  Future<void> _pushSyncIfNeeded() async {
-    try {
-      final results = _localQueueApi.fetchUnSyncedQueues();
-      developer.log('Results from synced query $results, '
-          'needs to sync: ${results.isNotEmpty}');
-
-      if (results.isNotEmpty) {
-        await _pushUnSyncedQueuesAndTodosToRemote();
-      }
-    } catch (e) {
-      developer.log(e.toString());
-    }
-  }
-
-  /// We listen here because we're using firebase and it lets us know through
-  /// a stream subscription that a change has been made in queues doc
-  ///
-  /// In a REST API we would need use another method
-  /// 1. Web hooks
-  /// 2.
-  Future<void> _pullSyncIfNeeded() async {
-    try {
-      await _pullQueuesAndTodosFromRemote();
-    } catch (e) {
-      developer.log(e.toString());
     }
   }
 }
