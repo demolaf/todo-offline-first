@@ -1,8 +1,5 @@
-![gif-4](https://github.com/demolaf/todo-offline-first/assets/48495111/798eb4a4-726b-433d-aaee-5f43611a5a51)# Todo Sync (Offline-first) App
-
+### An Offline-first approach Todo App using Realm and Firebase.
 [![HitCount](https://hits.dwyl.com/demolaf/todo-offline-first.svg?style=flat-square&show=unique)](http://hits.dwyl.com/demolaf/todo-offline-first)
-
-An Offline-first approach Todo App using Realm and Firebase.
 
 ### Content
 
