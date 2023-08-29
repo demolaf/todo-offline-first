@@ -36,7 +36,7 @@ $ flutter run --flavor production --target lib/main_production.dart
 ---
 ## Previews
 
-![gif-1](https://github.com/demolaf/todo-offline-first/assets/48495111/4c166ab9-9329-4f40-a854-d2ae72b0d066)
+https://github.com/demolaf/todo-offline-first/assets/48495111/b78a02de-fca2-4eaf-b216-d4ad455746da
 
 ## App Architecture and Folder Structure
 
