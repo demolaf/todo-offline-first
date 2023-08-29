@@ -1,4 +1,4 @@
-# Todo Sync (Offline-first) App
+![gif-4](https://github.com/demolaf/todo-offline-first/assets/48495111/798eb4a4-726b-433d-aaee-5f43611a5a51)# Todo Sync (Offline-first) App
 
 [![HitCount](https://hits.dwyl.com/demolaf/todo-offline-first.svg?style=flat-square&show=unique)](http://hits.dwyl.com/demolaf/todo-offline-first)
 
@@ -33,6 +33,13 @@ $ flutter run --flavor production --target lib/main_production.dart
 
 ---
 ## Previews
+
+![gif-1](https://github.com/demolaf/todo-offline-first/assets/48495111/4c166ab9-9329-4f40-a854-d2ae72b0d066)
+![gif-2](https://github.com/demolaf/todo-offline-first/assets/48495111/6a427dea-2caa-4bac-bc5e-746185aa6c84)
+![gif-3](https://github.com/demolaf/todo-offline-first/assets/48495111/72d47235-b28f-4b6e-8b3f-f18708c2b5a0)
+![gif-4](https://github.com/demolaf/todo-offline-first/assets/48495111/69901c14-80c9-4bb1-836a-2d92187e0e35)
+![gif-5](https://github.com/demolaf/todo-offline-first/assets/48495111/967f23b9-705e-40f3-a8f2-cdbab90ddd10)
+![gif-6](https://github.com/demolaf/todo-offline-first/assets/48495111/76706468-c07c-4ec2-921b-3605f2961131)
 
 <p align="center">
 <img src="readMeAssets/ss-1.png" width="200"/>
