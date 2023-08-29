@@ -17,8 +17,6 @@ class RemoteTodoApi extends TodoApi {
   Future<void> createTodo(TodoDTO todo) async {
     final docRef = _getUserTodosDocRef();
 
-    // TODO(demolaf): find out why this stream impl fails and the future works ?
-    // final todosInRemote = await getTodos().first;
     final todosInRemote = await _getTodosAsFuture();
 
     final todosToSyncJson = <Map<String, dynamic>>[

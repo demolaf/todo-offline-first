@@ -1,15 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
+import 'package:todo_bloc/src/core/enums/todo_operation_type.dart';
 import 'package:todo_bloc/src/core/global_imports.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
 import 'package:todo_bloc/src/modules/connection_checker/bloc/connection_checker_bloc.dart';
-import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
 import 'package:todo_bloc/src/modules/home/bloc/home_bloc.dart';
 import 'package:todo_bloc/src/modules/home/view/pages/queues_view.dart';
-import 'package:todo_bloc/src/modules/home/view/widgets/todays_todos_list_view.dart';
+import 'package:todo_bloc/src/modules/home/view/widgets/animated_sync_status.dart';
+import 'package:todo_bloc/src/modules/home/view/widgets/todo_list_view_builder.dart';
 import 'package:todo_bloc/src/modules/todo_sync/cubit/todo_sync_cubit.dart';
+import 'package:todo_bloc/src/modules/view_todo/view/view_todo_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -33,7 +33,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  TodoStatus selected = TodoStatus.today;
   FocusNode? searchTextFieldFocusNode;
 
   @override
@@ -175,68 +174,11 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: SegmentedButton<TodoStatus>(
-                      showSelectedIcon: false,
-                      segments: TodoStatus.values
-                          .map(
-                            (status) => ButtonSegment(
-                              value: status,
-                              label: Text(
-                                status.name.toUpperCase(),
-                                maxLines: 1,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      selected: {selected},
-                      onSelectionChanged: (newSelection) {
-                        setState(() {
-                          selected = newSelection.first;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 24),
                   Expanded(
-                    child: PageView.builder(
-                      itemCount: TodoStatus.values.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      onPageChanged: (page) {
-                        setState(() {
-                          selected = page.todoStatus();
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        switch (selected) {
-                          case TodoStatus.today when state.today.isEmpty:
-                            return const EmptyListState(
-                              sectionTitle: 'today',
-                            );
-                          case TodoStatus.upcoming when state.upcoming.isEmpty:
-                            return const EmptyListState(
-                              sectionTitle: 'upcoming',
-                            );
-                          case TodoStatus.completed
-                              when state.completed.isEmpty:
-                            return const EmptyListState(
-                              sectionTitle: 'completed',
-                            );
-                          case TodoStatus.today:
-                            return TodoSectionListView(
-                              todos: state.today,
-                            );
-                          case TodoStatus.upcoming:
-                            return TodoSectionListView(
-                              todos: state.upcoming,
-                            );
-                          case TodoStatus.completed:
-                            return TodoSectionListView(
-                              todos: state.completed,
-                            );
-                        }
-                      },
+                    child: TodoListViewBuilder(
+                      today: state.today,
+                      completed: state.completed,
+                      upcoming: state.upcoming,
                     ),
                   ),
                 ],
@@ -249,92 +191,12 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            CreateTodoView.route(todoOperationType: TodoOperationType.create),
+            ViewTodoView.route(todoOperationType: TodoOperationType.create),
           );
         },
         child: const Icon(
           Icons.add,
         ),
-      ),
-    );
-  }
-}
-
-class AnimatedSyncStatus extends StatefulWidget {
-  const AnimatedSyncStatus({
-    super.key,
-  });
-
-  @override
-  State<AnimatedSyncStatus> createState() => _AnimatedSyncStatusState();
-}
-
-class _AnimatedSyncStatusState extends State<AnimatedSyncStatus>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _rotationAnimationController;
-  late Animation<double> _rotationAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _rotationAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 10),
-    )..forward();
-
-    _rotationAnimation = Tween<double>(begin: 0, end: pi * 2).animate(
-      CurvedAnimation(
-        parent: _rotationAnimationController,
-        curve: Curves.linear,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _rotationAnimationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: _rotationAnimation,
-      child: Icon(
-        Icons.sync,
-        color: Theme.of(context).colorScheme.primaryContainer,
-        size: 36,
-      ),
-    );
-  }
-}
-
-class EmptyListState extends StatelessWidget {
-  const EmptyListState({
-    required this.sectionTitle,
-    super.key,
-  });
-
-  final String sectionTitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.note_add,
-            size: 48,
-            color: Theme.of(context).colorScheme.tertiaryContainer,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'You have no todos $sectionTitle',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ],
       ),
     );
   }

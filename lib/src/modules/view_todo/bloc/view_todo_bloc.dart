@@ -1,28 +1,27 @@
 import 'dart:developer' as developer;
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:todo_bloc/src/core/enums/enums.dart';
+import 'package:todo_bloc/src/core/enums/todo_operation_type.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
 import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
 import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
-import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
 
-part 'create_todo_event.dart';
+part 'view_todo_bloc.freezed.dart';
+part 'view_todo_event.dart';
+part 'view_todo_state.dart';
 
-part 'create_todo_state.dart';
-
-part 'create_todo_bloc.freezed.dart';
-
-class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
-  CreateTodoBloc({
+class ViewTodoBloc extends Bloc<ViewTodoEvent, ViewTodoState> {
+  ViewTodoBloc({
     required TodoRepository todoRepository,
     required TodoSyncRepository todoSyncRepository,
   })  : _todoRepository = todoRepository,
         _todoSyncRepository = todoSyncRepository,
-        super(const CreateTodoState.loading()) {
-    on<CreateTodoInitializationRequested>((event, emit) async {
+        super(const ViewTodoState.loading()) {
+    on<ViewTodoInitializationRequested>((event, emit) async {
       switch (event.todoOperationType) {
         case TodoOperationType.create:
           emit(
@@ -57,7 +56,7 @@ class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
 
       try {
         emit(
-          CreateTodoState.savingTodo(
+          ViewTodoState.savingTodo(
             processingState: ProcessingState.processing,
             todo: state.todo,
           ),
@@ -79,7 +78,7 @@ class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
         }
 
         emit(
-          CreateTodoState.savingTodo(
+          ViewTodoState.savingTodo(
             processingState: ProcessingState.success,
             todo: state.todo,
           ),
@@ -87,7 +86,7 @@ class CreateTodoBloc extends Bloc<CreateTodoEvent, CreateTodoState> {
       } catch (e) {
         developer.log('HERE: $e');
         emit(
-          CreateTodoState.savingTodo(
+          ViewTodoState.savingTodo(
             processingState: ProcessingState.failure,
             todo: state.todo,
           ),

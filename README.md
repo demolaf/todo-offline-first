@@ -2,13 +2,21 @@
 [![HitCount](https://hits.dwyl.com/demolaf/todo-offline-first.svg?style=flat-square&show=unique)](http://hits.dwyl.com/demolaf/todo-offline-first)
 
 ### Content
-
+* [Preview](#preview)
 * [Running the App](#running-the-app)
-* [Previews](#previews)
 * [App Architecture & Folder Structure](#app-architecture-and-folder-structure)
+
+## Preview
+
+https://github.com/demolaf/todo-offline-first/assets/48495111/b78a02de-fca2-4eaf-b216-d4ad455746da
 
 ## Running the App
 
+### Setting up Firebase
+
+Use this to get started with setting up [Firebase](https://firebase.google.com/docs/flutter/setup?platform=ios)
+
+### Environment Config
 This project contains 3 flavors:
 
 - development
@@ -29,9 +37,6 @@ $ flutter run --flavor production --target lib/main_production.dart
 ```
 
 ---
-## Previews
-
-![gif-1](https://github.com/demolaf/todo-offline-first/assets/48495111/4c166ab9-9329-4f40-a854-d2ae72b0d066)
 
 ## App Architecture and Folder Structure
 
@@ -58,7 +63,7 @@ lib
     ├── l10n
     ├── modules
     │   ├── connection_checker
-    │   ├── create_todo
+    │   ├── view_todo
     │   ├── home
     │   ├── landing_loading
     │   ├── settings
