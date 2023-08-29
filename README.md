@@ -33,11 +33,13 @@ $ flutter run --flavor production --target lib/main_production.dart
 
 ---
 ## Previews
+
+<p align="center">
 <img src="readMeAssets/ss-1.png" width="200"/>
 <img src="readMeAssets/ss-2.png" width="200"/>
 <img src="readMeAssets/ss-3.png" width="200"/>
 <img src="readMeAssets/ss-4.png" width="200"/>
-
+</p>
 
 ## App Architecture and Folder Structure
 
