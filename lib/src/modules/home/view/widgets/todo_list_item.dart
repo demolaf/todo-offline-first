@@ -3,8 +3,8 @@ import 'package:todo_bloc/src/core/global_imports.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
 import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
 
-class TodoListItem extends StatelessWidget {
-  const TodoListItem({
+class TodoSectionListItem extends StatelessWidget {
+  const TodoSectionListItem({
     required this.todo,
     super.key,
   });

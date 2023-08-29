@@ -8,7 +8,6 @@ import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/core/constants/theme.dart';
 import 'package:todo_bloc/src/data/api/queue/local_queue_api.dart';
 import 'package:todo_bloc/src/data/api/queue/remote_queue_api.dart';
-import 'package:todo_bloc/src/data/api/queue_service.dart';
 import 'package:todo_bloc/src/data/api/todo/local_todo_api.dart';
 import 'package:todo_bloc/src/data/api/todo/remote_todo_api.dart';
 import 'package:todo_bloc/src/data/api/user_api.dart';
@@ -73,23 +72,19 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<TodoSyncRepository>(
           create: (context) => TodoSyncRepositoryImpl(
-            queueService: QueueService(
-              localQueueApi: LocalQueueApi(
-                localStorage: context.read<LocalStorage>(),
-              ),
-              remoteQueueApi: RemoteQueueApi(
-                firestore: FirebaseFirestore.instance,
-                userId:
-                    context.read<LocalStorage>().readAll<UserDTO>().first.uid,
-              ),
-              localTodoApi: LocalTodoApi(
-                localStorage: context.read<LocalStorage>(),
-              ),
-              remoteTodoApi: RemoteTodoApi(
-                firestore: FirebaseFirestore.instance,
-                userId:
-                    context.read<LocalStorage>().readAll<UserDTO>().first.uid,
-              ),
+            localQueueApi: LocalQueueApi(
+              localStorage: context.read<LocalStorage>(),
+            ),
+            remoteQueueApi: RemoteQueueApi(
+              firestore: FirebaseFirestore.instance,
+              userId: context.read<LocalStorage>().readAll<UserDTO>().first.uid,
+            ),
+            localTodoApi: LocalTodoApi(
+              localStorage: context.read<LocalStorage>(),
+            ),
+            remoteTodoApi: RemoteTodoApi(
+              firestore: FirebaseFirestore.instance,
+              userId: context.read<LocalStorage>().readAll<UserDTO>().first.uid,
             ),
           ),
         ),

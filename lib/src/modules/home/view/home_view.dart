@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_bloc/src/core/enums/enums.dart';
-import 'package:todo_bloc/src/core/shared/shared.dart';
+import 'package:todo_bloc/src/core/global_imports.dart';
 import 'package:todo_bloc/src/data/repositories/todo/todo_repository.dart';
+import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository.dart';
 import 'package:todo_bloc/src/modules/connection_checker/bloc/connection_checker_bloc.dart';
 import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
 import 'package:todo_bloc/src/modules/home/bloc/home_bloc.dart';
-import 'package:todo_bloc/src/modules/home/view/pages/device_info_view.dart';
 import 'package:todo_bloc/src/modules/home/view/pages/queues_view.dart';
 import 'package:todo_bloc/src/modules/home/view/widgets/todays_todos_list_view.dart';
 import 'package:todo_bloc/src/modules/todo_sync/cubit/todo_sync_cubit.dart';
@@ -20,6 +17,7 @@ class HomeView extends StatefulWidget {
       builder: (context) {
         return BlocProvider(
           create: (context) => HomeBloc(
+            todoSyncRepository: context.read<TodoSyncRepository>(),
             todoRepository: context.read<TodoRepository>(),
           )..add(const HomeInitializationRequested()),
           child: const HomeView(),
@@ -78,36 +76,17 @@ class _HomeViewState extends State<HomeView> {
         centerTitle: false,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.person,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.settings_rounded,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(QueuesView.route(bloc: context.read<HomeBloc>()));
-                  },
-                  icon: const Icon(Icons.cloud),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.perm_device_info_rounded),
-                  onPressed: () {
-                    Navigator.of(context).push(DeviceInfoView.route());
-                  },
-                ),
-              ],
+            padding: const EdgeInsets.only(right: 12),
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(QueuesView.route(bloc: context.read<HomeBloc>()));
+              },
+              icon: Icon(
+                Icons.cloud,
+                color: Theme.of(context).colorScheme.primaryContainer,
+                size: 36,
+              ),
             ),
           ),
         ],
@@ -210,35 +189,31 @@ class _HomeViewState extends State<HomeView> {
                       },
                       itemBuilder: (context, index) {
                         switch (selected) {
-                          case TodoStatus.today when state.todos.isEmpty:
-                            return Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.note_add,
-                                    size: 48,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .tertiaryContainer,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'You have no todos',
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                ],
-                              ),
+                          case TodoStatus.today when state.today.isEmpty:
+                            return const EmptyListState(
+                              sectionTitle: 'today',
+                            );
+                          case TodoStatus.upcoming when state.upcoming.isEmpty:
+                            return const EmptyListState(
+                              sectionTitle: 'upcoming',
+                            );
+                          case TodoStatus.completed
+                              when state.completed.isEmpty:
+                            return const EmptyListState(
+                              sectionTitle: 'completed',
                             );
                           case TodoStatus.today:
-                            return TodaysTodosListView(
-                              todos: state.todos,
+                            return TodoSectionListView(
+                              todos: state.today,
                             );
                           case TodoStatus.upcoming:
-                            return Container();
+                            return TodoSectionListView(
+                              todos: state.upcoming,
+                            );
                           case TodoStatus.completed:
-                            return Container();
+                            return TodoSectionListView(
+                              todos: state.completed,
+                            );
                         }
                       },
                     ),
@@ -259,6 +234,36 @@ class _HomeViewState extends State<HomeView> {
         child: const Icon(
           Icons.add,
         ),
+      ),
+    );
+  }
+}
+
+class EmptyListState extends StatelessWidget {
+  const EmptyListState({
+    required this.sectionTitle,
+    super.key,
+  });
+
+  final String sectionTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.note_add,
+            size: 48,
+            color: Theme.of(context).colorScheme.tertiaryContainer,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'You have no todos $sectionTitle',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
       ),
     );
   }

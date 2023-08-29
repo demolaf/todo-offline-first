@@ -6,12 +6,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/data/api/queue/local_queue_api.dart';
 import 'package:todo_bloc/src/data/api/queue/remote_queue_api.dart';
-import 'package:todo_bloc/src/data/api/queue_service.dart';
 import 'package:todo_bloc/src/data/api/todo/local_todo_api.dart';
 import 'package:todo_bloc/src/data/api/todo/remote_todo_api.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
 import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
+import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository_impl.dart';
 
 class MockTodoDTO extends Mock implements TodoDTO {}
 
@@ -34,7 +34,7 @@ void main() {
   late MockLocalQueueApi localQueueApi;
   late MockQueueDTO queue;
   late MockTodoDTO todo;
-  late QueueService sut;
+  late TodoSyncRepositoryImpl sut;
 
   setUpAll(() {
     registerFallbackValue(MockTodoDTO());
@@ -50,7 +50,7 @@ void main() {
     queue = MockQueueDTO();
     todo = MockTodoDTO();
 
-    sut = QueueService(
+    sut = TodoSyncRepositoryImpl(
       localQueueApi: localQueueApi,
       localTodoApi: localTodoApi,
       remoteQueueApi: remoteQueueApi,
@@ -72,9 +72,9 @@ void main() {
             .thenReturn(QueueOperationType.create.name);
         when(() => localQueueApi.createQueue(any())).thenAnswer((_) async {});
 
-        await sut.storeQueueToSync(
+        await sut.createQueueForTodo(
           operationType: QueueOperationType.create,
-          todoId: '',
+          id: '',
         );
 
         verify(() => localQueueApi.createQueue(any())).called(1);
@@ -92,9 +92,9 @@ void main() {
             todoId: any(named: 'todoId'))).thenAnswer((_) async => false);
         when(() => localQueueApi.createQueue(any())).thenAnswer((_) async {});
 
-        await sut.storeQueueToSync(
+        await sut.createQueueForTodo(
           operationType: QueueOperationType.delete,
-          todoId: '',
+          id: '',
         );
 
         verify(() => localQueueApi.checkAndRemoveExistingUnsyncedQueue(
@@ -113,9 +113,9 @@ void main() {
             operationType: QueueOperationType.delete,
             todoId: '')).thenAnswer((_) async => true);
 
-        await sut.storeQueueToSync(
+        await sut.createQueueForTodo(
           operationType: QueueOperationType.delete,
-          todoId: '',
+          id: '',
         );
 
         verify(() => localQueueApi.checkAndRemoveExistingUnsyncedQueue(
@@ -163,7 +163,7 @@ void main() {
       when(() => localTodoApi.updateTodoLocal(any()))
           .thenAnswer((_) async => {});
 
-      await sut.pushUnSyncedQueuesAndTodosToRemote();
+      await sut.needToPush();
 
       verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
       verify(() => localTodoApi.getTodo(any())).called(1);
@@ -185,7 +185,7 @@ void main() {
       when(() => localTodoApi.updateTodoLocal(any()))
           .thenAnswer((_) async => {});
 
-      await sut.pushUnSyncedQueuesAndTodosToRemote();
+      await sut.needToPush();
 
       verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
       verify(() => localTodoApi.getTodo(any())).called(1);
@@ -204,7 +204,7 @@ void main() {
       when(() => localQueueApi.updateQueue(any()))
           .thenAnswer((invocation) async => () {});
 
-      await sut.pushUnSyncedQueuesAndTodosToRemote();
+      await sut.needToPush();
 
       verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
       verify(() => remoteTodoApi.deleteTodo(any())).called(1);
@@ -250,7 +250,7 @@ void main() {
       when(() => localQueueApi.createQueue(any()))
           .thenAnswer((_) async => queue);
 
-      await sut.pullQueuesAndTodosFromRemote();
+      await sut.needToPull();
 
       verify(() => remoteQueueApi.getQueues()).called(1);
       verify(() => localQueueApi.getQueues()).called(1);
@@ -271,7 +271,7 @@ void main() {
     //   when(() => localQueueApi.createQueue(any()))
     //       .thenAnswer((_) async => queue);
     //
-    //   await sut.pullQueuesAndTodosFromRemote();
+    //   await sut.needToPull();
     //
     //   verify(() => remoteQueueApi.getQueues()).called(1);
     //   verify(() => localQueueApi.getQueues()).called(1);
@@ -290,7 +290,7 @@ void main() {
       when(() => localQueueApi.createQueue(any()))
           .thenAnswer((_) async => queue);
 
-      await sut.pullQueuesAndTodosFromRemote();
+      await sut.needToPull();
 
       verify(() => remoteQueueApi.getQueues()).called(1);
       verify(() => localQueueApi.getQueues()).called(1);
