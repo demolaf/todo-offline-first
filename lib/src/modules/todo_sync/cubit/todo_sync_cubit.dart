@@ -20,34 +20,32 @@ class TodoSyncCubit extends Cubit<TodoSyncState> {
 
   Future<void> synchronizingTodosWithoutTimer({required bool connected}) async {
     if (connected) {
+      developer.log('start synchronizing todos');
+      emit(const TodoSyncState.syncing(active: true));
+
       await _todoSyncRepository.needToPull();
 
-      if (connected) {
-        emit(const TodoSyncState.syncing(active: true));
-        developer.log('start synchronizing todos');
-        await _todoSyncRepository.needToPush();
+      await _todoSyncRepository.needToPush();
 
-        emit(const TodoSyncState.syncing(active: false));
-        developer.log('done synchronizing todos');
-      }
+      emit(const TodoSyncState.syncing(active: false));
+      developer.log('done synchronizing todos');
     }
   }
 
   /// Using a timer Syncing remote
   Future<void> synchronizingTodosWithTimer({required bool connected}) async {
     developer.log('initiating sync timer');
-    await _todoSyncRepository.needToPull();
     _syncTimer = Timer.periodic(const Duration(seconds: 10), (timer) async {
       if (connected) {
-        if (connected) {
-          emit(const TodoSyncState.syncing(active: true));
-          developer.log('start synchronizing todos');
+        developer.log('start synchronizing todos');
+        emit(const TodoSyncState.syncing(active: true));
 
-          await _todoSyncRepository.needToPush();
+        await _todoSyncRepository.needToPull();
 
-          emit(const TodoSyncState.syncing(active: false));
-          developer.log('done synchronizing todos');
-        }
+        await _todoSyncRepository.needToPush();
+
+        emit(const TodoSyncState.syncing(active: false));
+        developer.log('done synchronizing todos');
       }
     });
   }

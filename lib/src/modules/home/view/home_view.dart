@@ -83,10 +83,9 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 BlocSelector<TodoSyncCubit, TodoSyncState, bool>(
                   selector: (state) {
-                    if (state is TodoSyncStateSyncing) {
-                      return state.active;
+                    if (state is TodoSyncStateSyncing && state.active) {
+                      return true;
                     }
-
                     return false;
                   },
                   builder: (context, isSyncing) {
