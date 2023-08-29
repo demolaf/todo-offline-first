@@ -2,10 +2,13 @@
 [![HitCount](https://hits.dwyl.com/demolaf/todo-offline-first.svg?style=flat-square&show=unique)](http://hits.dwyl.com/demolaf/todo-offline-first)
 
 ### Content
-
-* [Running the App](#running-the-app)
 * [Previews](#previews)
+* [Running the App](#running-the-app)
 * [App Architecture & Folder Structure](#app-architecture-and-folder-structure)
+
+## Preview
+
+https://github.com/demolaf/todo-offline-first/assets/48495111/b78a02de-fca2-4eaf-b216-d4ad455746da
 
 ## Running the App
 
@@ -34,9 +37,6 @@ $ flutter run --flavor production --target lib/main_production.dart
 ```
 
 ---
-## Preview
-
-https://github.com/demolaf/todo-offline-first/assets/48495111/b78a02de-fca2-4eaf-b216-d4ad455746da
 
 ## App Architecture and Folder Structure
 
