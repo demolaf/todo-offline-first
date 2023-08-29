@@ -66,7 +66,7 @@ void main() {
     });
 
     test(
-      'if queue operation is create, create a new queue and todo',
+      'if queue operation is create, create a new queue for create operation',
       () async {
         when(() => queue.operationType)
             .thenReturn(QueueOperationType.create.name);
@@ -82,7 +82,7 @@ void main() {
     );
 
     test(
-      'if queue operation is update,',
+      'if queue operation is update, create a new queue for update operation',
       () async {
         when(() => queue.operationType)
             .thenReturn(QueueOperationType.update.name);
@@ -99,7 +99,7 @@ void main() {
 
     test(
       'if queue operation is delete and queue is synced, '
-      'then create a new queue',
+      'then create a new queue for delete operation',
       () async {
         when(() => queue.operationType)
             .thenReturn(QueueOperationType.delete.name);
