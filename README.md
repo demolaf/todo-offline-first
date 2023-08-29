@@ -9,6 +9,11 @@
 
 ## Running the App
 
+### Setting up Firebase
+
+Use this to get started with setting up [Firebase](https://firebase.google.com/docs/flutter/setup?platform=ios)
+
+### Environment Config
 This project contains 3 flavors:
 
 - development
