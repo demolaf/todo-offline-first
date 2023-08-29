@@ -34,7 +34,7 @@ $ flutter run --flavor production --target lib/main_production.dart
 ```
 
 ---
-## Previews
+## Preview
 
 https://github.com/demolaf/todo-offline-first/assets/48495111/b78a02de-fca2-4eaf-b216-d4ad455746da
 
