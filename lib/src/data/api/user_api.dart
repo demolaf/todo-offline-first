@@ -1,5 +1,4 @@
 // ignore_for_file: unused_field
-import 'dart:developer' as developer;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
 import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
@@ -24,7 +23,6 @@ class UserApi {
             ),
           );
     } catch (_) {
-      developer.log('createNewUserRemote HERE: $userDTO');
       userDTO = await createNewUserRemote(
         uid: user!.uid,
         firstName: user.firstName,
