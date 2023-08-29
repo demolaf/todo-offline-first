@@ -32,15 +32,6 @@ $ flutter run --flavor production --target lib/main_production.dart
 ## Previews
 
 ![gif-1](https://github.com/demolaf/todo-offline-first/assets/48495111/4c166ab9-9329-4f40-a854-d2ae72b0d066)
-![gif-4](https://github.com/demolaf/todo-offline-first/assets/48495111/69901c14-80c9-4bb1-836a-2d92187e0e35)
-![gif-6](https://github.com/demolaf/todo-offline-first/assets/48495111/76706468-c07c-4ec2-921b-3605f2961131)
-
-<p align="center">
-<img src="readMeAssets/ss-1.png" width="200"/>
-<img src="readMeAssets/ss-2.png" width="200"/>
-<img src="readMeAssets/ss-3.png" width="200"/>
-<img src="readMeAssets/ss-4.png" width="200"/>
-</p>
 
 ## App Architecture and Folder Structure
 
