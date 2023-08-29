@@ -290,6 +290,7 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
         developer.log('Found todo, updating & storing ${queue.todoId}');
         // update todo_object in local because the one in local is outdated
         await _localTodoApi.updateTodo(todoFromRemote);
+        await _markTodoAsSynced(todoFromRemote);
       }
 
       await _localQueueApi.createQueue(queue);
@@ -319,7 +320,7 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     final now = DateTime.now().toIso8601String();
 
     try {
-      await _localQueueApi.updateQueue(() {
+      await _localQueueApi.updateQueueProperty(() {
         queue.lastSyncedAt = now;
       });
     } catch (e) {
@@ -334,7 +335,7 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
   // if todo_object was created you have to mark it as synced after push
   Future<void> _markTodoAsSynced(TodoDTO todo) async {
     try {
-      await _localTodoApi.updateTodoLocal(() {
+      await _localTodoApi.updateTodoProperty(() {
         todo.synced = true;
       });
     } catch (e) {

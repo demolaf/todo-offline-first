@@ -184,9 +184,9 @@ void main() {
       when(() => todo.synced).thenReturn(true);
       when(() => remoteTodoApi.createTodo(any())).thenAnswer((_) async => {});
       when(() => remoteQueueApi.createQueue(any())).thenAnswer((_) async => {});
-      when(() => localQueueApi.updateQueue(any()))
+      when(() => localQueueApi.updateQueueProperty(any()))
           .thenAnswer((invocation) async => () {});
-      when(() => localTodoApi.updateTodoLocal(any()))
+      when(() => localTodoApi.updateTodoProperty(any()))
           .thenAnswer((_) async => {});
 
       await sut.needToPush();
@@ -195,8 +195,8 @@ void main() {
       verify(() => localTodoApi.getTodo(any())).called(1);
       verify(() => remoteTodoApi.createTodo(any())).called(1);
       verify(() => remoteQueueApi.createQueue(any())).called(1);
-      verify(() => localQueueApi.updateQueue(any())).called(1);
-      verify(() => localTodoApi.updateTodoLocal(any())).called(1);
+      verify(() => localQueueApi.updateQueueProperty(any())).called(1);
+      verify(() => localTodoApi.updateTodoProperty(any())).called(1);
     });
 
     test(
@@ -208,9 +208,9 @@ void main() {
       when(() => localTodoApi.getTodo(any())).thenAnswer((_) async => todo);
       when(() => remoteTodoApi.updateTodo(any())).thenAnswer((_) async => {});
       when(() => remoteQueueApi.createQueue(any())).thenAnswer((_) async => {});
-      when(() => localQueueApi.updateQueue(any()))
+      when(() => localQueueApi.updateQueueProperty(any()))
           .thenAnswer((invocation) async => () {});
-      when(() => localTodoApi.updateTodoLocal(any()))
+      when(() => localTodoApi.updateTodoProperty(any()))
           .thenAnswer((_) async => {});
 
       await sut.needToPush();
@@ -219,8 +219,8 @@ void main() {
       verify(() => localTodoApi.getTodo(any())).called(1);
       verify(() => remoteTodoApi.updateTodo(any())).called(1);
       verify(() => remoteQueueApi.createQueue(any())).called(1);
-      verify(() => localQueueApi.updateQueue(any())).called(1);
-      verify(() => localTodoApi.updateTodoLocal(any())).called(1);
+      verify(() => localQueueApi.updateQueueProperty(any())).called(1);
+      verify(() => localTodoApi.updateTodoProperty(any())).called(1);
     });
 
     test(
@@ -231,7 +231,7 @@ void main() {
           .thenReturn(QueueOperationType.delete.name);
       when(() => remoteTodoApi.deleteTodo(any())).thenAnswer((_) async => {});
       when(() => remoteQueueApi.createQueue(any())).thenAnswer((_) async => {});
-      when(() => localQueueApi.updateQueue(any()))
+      when(() => localQueueApi.updateQueueProperty(any()))
           .thenAnswer((invocation) async => () {});
 
       await sut.needToPush();
@@ -239,7 +239,7 @@ void main() {
       verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
       verify(() => remoteTodoApi.deleteTodo(any())).called(1);
       verify(() => remoteQueueApi.createQueue(any())).called(1);
-      verify(() => localQueueApi.updateQueue(any())).called(1);
+      verify(() => localQueueApi.updateQueueProperty(any())).called(1);
     });
   });
 

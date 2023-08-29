@@ -9,7 +9,7 @@ abstract class QueueApi {
 
   Future<void> createQueue(QueueDTO queue);
 
-  Future<void> updateQueue(void Function() callback);
+  Future<void> updateQueueProperty(void Function() callback);
 
   Future<void> deleteQueue(String id);
 }

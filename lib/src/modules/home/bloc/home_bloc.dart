@@ -32,7 +32,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         false,
                   )
                   .toList()
-                ..sort(),
+                ..sort((a, b) => (b.time ?? '').compareTo(a.time ?? '')),
               upcoming: todos
                   .where(
                     (element) =>
@@ -41,7 +41,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         false,
                   )
                   .toList()
-                ..sort(),
+                ..sort((a, b) => (a.time ?? '').compareTo(b.time ?? '')),
               completed: todos
                   .where(
                     (element) => element.completed ?? false,

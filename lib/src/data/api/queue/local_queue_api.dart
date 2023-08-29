@@ -52,7 +52,7 @@ class LocalQueueApi extends QueueApi {
   }
 
   @override
-  Future<void> updateQueue(void Function() callback) {
+  Future<void> updateQueueProperty(void Function() callback) {
     return _localStorage.update<QueueDTO>(callback);
   }
 
