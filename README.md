@@ -63,7 +63,7 @@ lib
     ├── l10n
     ├── modules
     │   ├── connection_checker
-    │   ├── create_todo
+    │   ├── view_todo
     │   ├── home
     │   ├── landing_loading
     │   ├── settings
