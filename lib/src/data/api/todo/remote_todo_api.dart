@@ -72,9 +72,19 @@ class RemoteTodoApi extends TodoApi {
   }
 
   @override
-  Future<void> updateTodo(TodoDTO todo) {
-    // TODO(demolaf): implement updateTodo
-    throw UnimplementedError();
+  Future<void> updateTodo(TodoDTO todo) async {
+    final docRef = _getUserTodosDocRef();
+
+    final todosInRemote = await _getTodosAsFuture();
+
+    todosInRemote.removeWhere((element) => element.id == todo.id);
+
+    final todosToSyncJson = <Map<String, dynamic>>[
+      ...todosInRemote.map((e) => e.toJson()),
+      todo.toJson(),
+    ];
+
+    await docRef.update({'todos': todosToSyncJson});
   }
 
   Future<List<TodoDTO>> _getTodosAsFuture() {

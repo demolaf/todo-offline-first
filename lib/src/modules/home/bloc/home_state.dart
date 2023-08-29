@@ -6,7 +6,12 @@ class HomeState with _$HomeState {
 
   const factory HomeState.loading() = HomeStateLoading;
 
-  const factory HomeState.ready({required List<Todo> todos}) = HomeStateReady;
+  const factory HomeState.ready({
+    required List<Todo> today,
+    required List<Todo> upcoming,
+    required List<Todo> completed,
+  }) = HomeStateReady;
 
-  const factory HomeState.viewingQueues() = ViewingQueues;
+  const factory HomeState.viewingQueues({required List<QueueObject> queues}) =
+      ViewingQueues;
 }

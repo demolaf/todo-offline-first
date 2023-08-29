@@ -13,3 +13,10 @@ class HomeInitializationRequested extends HomeEvent {
   @override
   List<Object> get props => [];
 }
+
+class QueuesDataRequested extends HomeEvent {
+  const QueuesDataRequested();
+
+  @override
+  List<Object> get props => [];
+}

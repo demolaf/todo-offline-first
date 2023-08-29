@@ -7,11 +7,11 @@ extension DateHelpers on DateTime {
   }
 
   bool isYesterday() {
-    return Moment.now().isBefore(this);
+    return isBefore(Moment.now());
   }
 
   bool isAheadOfToday() {
-    return Moment.now().isAfter(this);
+    return isAfter(Moment.now());
   }
 
   String formatDateAndTime() {

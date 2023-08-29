@@ -19,6 +19,7 @@ class LocalTodoApi extends TodoApi {
   }
 
   /// Create a todo_object and store in local
+  // TODO(demolaf): update this to upsertTodo instead
   @override
   Future<void> createTodo(TodoDTO todo) async {
     try {
@@ -29,12 +30,15 @@ class LocalTodoApi extends TodoApi {
   }
 
   @override
-  Future<void> updateTodo(TodoDTO todo) {
-    // TODO(demolaf): implement updateTodo
-    throw UnimplementedError();
+  Future<void> updateTodo(TodoDTO todo) async {
+    try {
+      await _localStorage.create(todo);
+    } catch (e) {
+      developer.log(e.toString());
+    }
   }
 
-  Future<void> updateTodoLocal(void Function() callback) {
+  Future<void> updateTodoProperty(void Function() callback) {
     return _localStorage.update<TodoDTO>(callback);
   }
 

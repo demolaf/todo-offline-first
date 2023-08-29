@@ -1,5 +1,6 @@
 // import 'dart:developer' as developer;
 
+import 'package:clock/clock.dart';
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/data/api/todo/todo_api.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
@@ -30,7 +31,7 @@ class TodoRepositoryImpl implements TodoRepository {
         todo.priority!,
         todo.description,
         todo.title,
-        todo.lastModifiedAt!,
+        clock.now().toIso8601String(),
         false,
         todo.completed ?? false,
       ),

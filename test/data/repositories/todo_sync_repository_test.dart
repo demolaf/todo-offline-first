@@ -6,12 +6,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:realm/realm.dart';
 import 'package:todo_bloc/src/data/api/queue/local_queue_api.dart';
 import 'package:todo_bloc/src/data/api/queue/remote_queue_api.dart';
-import 'package:todo_bloc/src/data/api/queue_service.dart';
 import 'package:todo_bloc/src/data/api/todo/local_todo_api.dart';
 import 'package:todo_bloc/src/data/api/todo/remote_todo_api.dart';
 import 'package:todo_bloc/src/data/local_storage/local_storage.dart';
 import 'package:todo_bloc/src/data/models/dtos/queue/queue_dto.dart';
 import 'package:todo_bloc/src/data/models/dtos/todo/todo_dto.dart';
+import 'package:todo_bloc/src/data/repositories/todo_sync/todo_sync_repository_impl.dart';
 
 class MockTodoDTO extends Mock implements TodoDTO {}
 
@@ -34,7 +34,7 @@ void main() {
   late MockLocalQueueApi localQueueApi;
   late MockQueueDTO queue;
   late MockTodoDTO todo;
-  late QueueService sut;
+  late TodoSyncRepositoryImpl sut;
 
   setUpAll(() {
     registerFallbackValue(MockTodoDTO());
@@ -50,7 +50,7 @@ void main() {
     queue = MockQueueDTO();
     todo = MockTodoDTO();
 
-    sut = QueueService(
+    sut = TodoSyncRepositoryImpl(
       localQueueApi: localQueueApi,
       localTodoApi: localTodoApi,
       remoteQueueApi: remoteQueueApi,
@@ -66,15 +66,31 @@ void main() {
     });
 
     test(
-      'if queue operation is create',
+      'if queue operation is create, create a new queue and todo',
       () async {
         when(() => queue.operationType)
             .thenReturn(QueueOperationType.create.name);
         when(() => localQueueApi.createQueue(any())).thenAnswer((_) async {});
 
-        await sut.storeQueueToSync(
+        await sut.createQueueForTodo(
           operationType: QueueOperationType.create,
-          todoId: '',
+          id: '',
+        );
+
+        verify(() => localQueueApi.createQueue(any())).called(1);
+      },
+    );
+
+    test(
+      'if queue operation is update,',
+      () async {
+        when(() => queue.operationType)
+            .thenReturn(QueueOperationType.update.name);
+        when(() => localQueueApi.createQueue(any())).thenAnswer((_) async {});
+
+        await sut.createQueueForTodo(
+          operationType: QueueOperationType.update,
+          id: '',
         );
 
         verify(() => localQueueApi.createQueue(any())).called(1);
@@ -92,9 +108,9 @@ void main() {
             todoId: any(named: 'todoId'))).thenAnswer((_) async => false);
         when(() => localQueueApi.createQueue(any())).thenAnswer((_) async {});
 
-        await sut.storeQueueToSync(
+        await sut.createQueueForTodo(
           operationType: QueueOperationType.delete,
-          todoId: '',
+          id: '',
         );
 
         verify(() => localQueueApi.checkAndRemoveExistingUnsyncedQueue(
@@ -104,7 +120,7 @@ void main() {
     );
 
     test(
-      'if queue operation is delete and unsynced, then delete unsynced queue '
+      'if queue operation is delete and queue is unsynced, then delete unsynced queue '
       'and return',
       () async {
         when(() => queue.operationType)
@@ -113,9 +129,9 @@ void main() {
             operationType: QueueOperationType.delete,
             todoId: '')).thenAnswer((_) async => true);
 
-        await sut.storeQueueToSync(
+        await sut.createQueueForTodo(
           operationType: QueueOperationType.delete,
-          todoId: '',
+          id: '',
         );
 
         verify(() => localQueueApi.checkAndRemoveExistingUnsyncedQueue(
@@ -150,7 +166,17 @@ void main() {
       verifyNoMoreInteractions(remoteTodoApi);
     });
 
-    test('if queue operation is create', () async {
+    test('if no unsynced queues then return', () async {
+      when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([]);
+
+      await sut.needToPush();
+
+      verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
+    });
+
+    test(
+        'if queue operation is create, create todo in remote and create queue '
+        'in remote then mark queue and todo as synced in local', () async {
       when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([queue]);
       when(() => queue.operationType)
           .thenReturn(QueueOperationType.create.name);
@@ -158,58 +184,62 @@ void main() {
       when(() => todo.synced).thenReturn(true);
       when(() => remoteTodoApi.createTodo(any())).thenAnswer((_) async => {});
       when(() => remoteQueueApi.createQueue(any())).thenAnswer((_) async => {});
-      when(() => localQueueApi.updateQueue(any()))
+      when(() => localQueueApi.updateQueueProperty(any()))
           .thenAnswer((invocation) async => () {});
-      when(() => localTodoApi.updateTodoLocal(any()))
+      when(() => localTodoApi.updateTodoProperty(any()))
           .thenAnswer((_) async => {});
 
-      await sut.pushUnSyncedQueuesAndTodosToRemote();
+      await sut.needToPush();
 
       verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
       verify(() => localTodoApi.getTodo(any())).called(1);
       verify(() => remoteTodoApi.createTodo(any())).called(1);
       verify(() => remoteQueueApi.createQueue(any())).called(1);
-      verify(() => localQueueApi.updateQueue(any())).called(1);
-      verify(() => localTodoApi.updateTodoLocal(any())).called(1);
+      verify(() => localQueueApi.updateQueueProperty(any())).called(1);
+      verify(() => localTodoApi.updateTodoProperty(any())).called(1);
     });
 
-    test('if queue operation is update', () async {
+    test(
+        'if queue operation is update, update todo in remote and create queue '
+        'in remote then mark queue and todo as synced in local', () async {
       when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([queue]);
       when(() => queue.operationType)
           .thenReturn(QueueOperationType.update.name);
       when(() => localTodoApi.getTodo(any())).thenAnswer((_) async => todo);
       when(() => remoteTodoApi.updateTodo(any())).thenAnswer((_) async => {});
       when(() => remoteQueueApi.createQueue(any())).thenAnswer((_) async => {});
-      when(() => localQueueApi.updateQueue(any()))
+      when(() => localQueueApi.updateQueueProperty(any()))
           .thenAnswer((invocation) async => () {});
-      when(() => localTodoApi.updateTodoLocal(any()))
+      when(() => localTodoApi.updateTodoProperty(any()))
           .thenAnswer((_) async => {});
 
-      await sut.pushUnSyncedQueuesAndTodosToRemote();
+      await sut.needToPush();
 
       verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
       verify(() => localTodoApi.getTodo(any())).called(1);
       verify(() => remoteTodoApi.updateTodo(any())).called(1);
       verify(() => remoteQueueApi.createQueue(any())).called(1);
-      verify(() => localQueueApi.updateQueue(any())).called(1);
-      verify(() => localTodoApi.updateTodoLocal(any())).called(1);
+      verify(() => localQueueApi.updateQueueProperty(any())).called(1);
+      verify(() => localTodoApi.updateTodoProperty(any())).called(1);
     });
 
-    test('if queue operation is delete', () async {
+    test(
+        'if queue operation is delete, delete todo in remote and create queue '
+        'in remote then mark queue as synced in local', () async {
       when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([queue]);
       when(() => queue.operationType)
           .thenReturn(QueueOperationType.delete.name);
       when(() => remoteTodoApi.deleteTodo(any())).thenAnswer((_) async => {});
       when(() => remoteQueueApi.createQueue(any())).thenAnswer((_) async => {});
-      when(() => localQueueApi.updateQueue(any()))
+      when(() => localQueueApi.updateQueueProperty(any()))
           .thenAnswer((invocation) async => () {});
 
-      await sut.pushUnSyncedQueuesAndTodosToRemote();
+      await sut.needToPush();
 
       verify(() => localQueueApi.fetchUnSyncedQueues()).called(1);
       verify(() => remoteTodoApi.deleteTodo(any())).called(1);
       verify(() => remoteQueueApi.createQueue(any())).called(1);
-      verify(() => localQueueApi.updateQueue(any())).called(1);
+      verify(() => localQueueApi.updateQueueProperty(any())).called(1);
     });
   });
 
@@ -240,7 +270,17 @@ void main() {
       verifyNoMoreInteractions(remoteTodoApi);
     });
 
-    test('if queue operation is create', () async {
+    test('if no queues in remote then return', () async {
+      when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => []);
+
+      await sut.needToPull();
+
+      verify(() => remoteQueueApi.getQueues()).called(1);
+    });
+
+    test(
+        'if queue operation is create, fetch queue and todo from '
+        'remote then store queue and todo in local', () async {
       when(() => queue.operationType)
           .thenReturn(QueueOperationType.create.name);
       when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => [queue]);
@@ -250,7 +290,7 @@ void main() {
       when(() => localQueueApi.createQueue(any()))
           .thenAnswer((_) async => queue);
 
-      await sut.pullQueuesAndTodosFromRemote();
+      await sut.needToPull();
 
       verify(() => remoteQueueApi.getQueues()).called(1);
       verify(() => localQueueApi.getQueues()).called(1);
@@ -271,7 +311,7 @@ void main() {
     //   when(() => localQueueApi.createQueue(any()))
     //       .thenAnswer((_) async => queue);
     //
-    //   await sut.pullQueuesAndTodosFromRemote();
+    //   await sut.needToPull();
     //
     //   verify(() => remoteQueueApi.getQueues()).called(1);
     //   verify(() => localQueueApi.getQueues()).called(1);
@@ -281,7 +321,9 @@ void main() {
     //   verify(() => localQueueApi.createQueue(any())).called(1);
     // });
 
-    test('if queue operation is delete', () async {
+    test(
+        'if queue operation is delete, fetch queue and todo from remote '
+        'then delete todo in local and store queue in local', () async {
       when(() => queue.operationType)
           .thenReturn(QueueOperationType.delete.name);
       when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => [queue]);
@@ -290,7 +332,7 @@ void main() {
       when(() => localQueueApi.createQueue(any()))
           .thenAnswer((_) async => queue);
 
-      await sut.pullQueuesAndTodosFromRemote();
+      await sut.needToPull();
 
       verify(() => remoteQueueApi.getQueues()).called(1);
       verify(() => localQueueApi.getQueues()).called(1);
@@ -298,25 +340,4 @@ void main() {
       verify(() => localQueueApi.createQueue(any())).called(1);
     });
   });
-
-  // group('when checkIfNeedToPushSync is called', () {
-  //   setUp(() {
-  //     when(() => queue.id)
-  //         .thenReturn(ObjectId.fromHexString('64d0f9f22912c96e042d4fb7'));
-  //     when(() => queue.todoId).thenReturn('64d0f9f22912c96e042d4fb6');
-  //     when(() => queue.createdAt).thenReturn('');
-  //   });
-  //
-  //   test('if there are unsynced queues return true', () async {
-  //     when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([queue]);
-  //     final value = await sut.pushSyncIfNeeded();
-  //     expect(value, true);
-  //   });
-  //
-  //   test('if there are no unsynced queues return false', () async {
-  //     when(() => localQueueApi.fetchUnSyncedQueues()).thenReturn([]);
-  //     final value = await sut.pushSyncIfNeeded();
-  //     expect(value, false);
-  //   });
-  // });
 }

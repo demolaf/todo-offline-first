@@ -20,24 +20,30 @@ mixin _$HomeState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Todo> todos) ready,
-    required TResult Function() viewingQueues,
+    required TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)
+        ready,
+    required TResult Function(List<QueueObject> queues) viewingQueues,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Todo> todos)? ready,
-    TResult? Function()? viewingQueues,
+    TResult? Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult? Function(List<QueueObject> queues)? viewingQueues,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Todo> todos)? ready,
-    TResult Function()? viewingQueues,
+    TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult Function(List<QueueObject> queues)? viewingQueues,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -124,8 +130,10 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Todo> todos) ready,
-    required TResult Function() viewingQueues,
+    required TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)
+        ready,
+    required TResult Function(List<QueueObject> queues) viewingQueues,
   }) {
     return initial();
   }
@@ -135,8 +143,10 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Todo> todos)? ready,
-    TResult? Function()? viewingQueues,
+    TResult? Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult? Function(List<QueueObject> queues)? viewingQueues,
   }) {
     return initial?.call();
   }
@@ -146,8 +156,10 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Todo> todos)? ready,
-    TResult Function()? viewingQueues,
+    TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult Function(List<QueueObject> queues)? viewingQueues,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -238,8 +250,10 @@ class _$HomeStateLoading implements HomeStateLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Todo> todos) ready,
-    required TResult Function() viewingQueues,
+    required TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)
+        ready,
+    required TResult Function(List<QueueObject> queues) viewingQueues,
   }) {
     return loading();
   }
@@ -249,8 +263,10 @@ class _$HomeStateLoading implements HomeStateLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Todo> todos)? ready,
-    TResult? Function()? viewingQueues,
+    TResult? Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult? Function(List<QueueObject> queues)? viewingQueues,
   }) {
     return loading?.call();
   }
@@ -260,8 +276,10 @@ class _$HomeStateLoading implements HomeStateLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Todo> todos)? ready,
-    TResult Function()? viewingQueues,
+    TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult Function(List<QueueObject> queues)? viewingQueues,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -318,7 +336,7 @@ abstract class _$$HomeStateReadyCopyWith<$Res> {
           _$HomeStateReady value, $Res Function(_$HomeStateReady) then) =
       __$$HomeStateReadyCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<Todo> todos});
+  $Res call({List<Todo> today, List<Todo> upcoming, List<Todo> completed});
 }
 
 /// @nodoc
@@ -332,12 +350,22 @@ class __$$HomeStateReadyCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? todos = null,
+    Object? today = null,
+    Object? upcoming = null,
+    Object? completed = null,
   }) {
     return _then(_$HomeStateReady(
-      todos: null == todos
-          ? _value._todos
-          : todos // ignore: cast_nullable_to_non_nullable
+      today: null == today
+          ? _value._today
+          : today // ignore: cast_nullable_to_non_nullable
+              as List<Todo>,
+      upcoming: null == upcoming
+          ? _value._upcoming
+          : upcoming // ignore: cast_nullable_to_non_nullable
+              as List<Todo>,
+      completed: null == completed
+          ? _value._completed
+          : completed // ignore: cast_nullable_to_non_nullable
               as List<Todo>,
     ));
   }
@@ -346,19 +374,41 @@ class __$$HomeStateReadyCopyWithImpl<$Res>
 /// @nodoc
 
 class _$HomeStateReady implements HomeStateReady {
-  const _$HomeStateReady({required final List<Todo> todos}) : _todos = todos;
+  const _$HomeStateReady(
+      {required final List<Todo> today,
+      required final List<Todo> upcoming,
+      required final List<Todo> completed})
+      : _today = today,
+        _upcoming = upcoming,
+        _completed = completed;
 
-  final List<Todo> _todos;
+  final List<Todo> _today;
   @override
-  List<Todo> get todos {
-    if (_todos is EqualUnmodifiableListView) return _todos;
+  List<Todo> get today {
+    if (_today is EqualUnmodifiableListView) return _today;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_todos);
+    return EqualUnmodifiableListView(_today);
+  }
+
+  final List<Todo> _upcoming;
+  @override
+  List<Todo> get upcoming {
+    if (_upcoming is EqualUnmodifiableListView) return _upcoming;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_upcoming);
+  }
+
+  final List<Todo> _completed;
+  @override
+  List<Todo> get completed {
+    if (_completed is EqualUnmodifiableListView) return _completed;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_completed);
   }
 
   @override
   String toString() {
-    return 'HomeState.ready(todos: $todos)';
+    return 'HomeState.ready(today: $today, upcoming: $upcoming, completed: $completed)';
   }
 
   @override
@@ -366,12 +416,18 @@ class _$HomeStateReady implements HomeStateReady {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HomeStateReady &&
-            const DeepCollectionEquality().equals(other._todos, _todos));
+            const DeepCollectionEquality().equals(other._today, _today) &&
+            const DeepCollectionEquality().equals(other._upcoming, _upcoming) &&
+            const DeepCollectionEquality()
+                .equals(other._completed, _completed));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_todos));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_today),
+      const DeepCollectionEquality().hash(_upcoming),
+      const DeepCollectionEquality().hash(_completed));
 
   @JsonKey(ignore: true)
   @override
@@ -384,10 +440,12 @@ class _$HomeStateReady implements HomeStateReady {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Todo> todos) ready,
-    required TResult Function() viewingQueues,
+    required TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)
+        ready,
+    required TResult Function(List<QueueObject> queues) viewingQueues,
   }) {
-    return ready(todos);
+    return ready(today, upcoming, completed);
   }
 
   @override
@@ -395,10 +453,12 @@ class _$HomeStateReady implements HomeStateReady {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Todo> todos)? ready,
-    TResult? Function()? viewingQueues,
+    TResult? Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult? Function(List<QueueObject> queues)? viewingQueues,
   }) {
-    return ready?.call(todos);
+    return ready?.call(today, upcoming, completed);
   }
 
   @override
@@ -406,12 +466,14 @@ class _$HomeStateReady implements HomeStateReady {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Todo> todos)? ready,
-    TResult Function()? viewingQueues,
+    TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult Function(List<QueueObject> queues)? viewingQueues,
     required TResult orElse(),
   }) {
     if (ready != null) {
-      return ready(todos);
+      return ready(today, upcoming, completed);
     }
     return orElse();
   }
@@ -455,10 +517,14 @@ class _$HomeStateReady implements HomeStateReady {
 }
 
 abstract class HomeStateReady implements HomeState {
-  const factory HomeStateReady({required final List<Todo> todos}) =
-      _$HomeStateReady;
+  const factory HomeStateReady(
+      {required final List<Todo> today,
+      required final List<Todo> upcoming,
+      required final List<Todo> completed}) = _$HomeStateReady;
 
-  List<Todo> get todos;
+  List<Todo> get today;
+  List<Todo> get upcoming;
+  List<Todo> get completed;
   @JsonKey(ignore: true)
   _$$HomeStateReadyCopyWith<_$HomeStateReady> get copyWith =>
       throw _privateConstructorUsedError;
@@ -469,6 +535,8 @@ abstract class _$$ViewingQueuesCopyWith<$Res> {
   factory _$$ViewingQueuesCopyWith(
           _$ViewingQueues value, $Res Function(_$ViewingQueues) then) =
       __$$ViewingQueuesCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<QueueObject> queues});
 }
 
 /// @nodoc
@@ -478,36 +546,69 @@ class __$$ViewingQueuesCopyWithImpl<$Res>
   __$$ViewingQueuesCopyWithImpl(
       _$ViewingQueues _value, $Res Function(_$ViewingQueues) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? queues = null,
+  }) {
+    return _then(_$ViewingQueues(
+      queues: null == queues
+          ? _value._queues
+          : queues // ignore: cast_nullable_to_non_nullable
+              as List<QueueObject>,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$ViewingQueues implements ViewingQueues {
-  const _$ViewingQueues();
+  const _$ViewingQueues({required final List<QueueObject> queues})
+      : _queues = queues;
+
+  final List<QueueObject> _queues;
+  @override
+  List<QueueObject> get queues {
+    if (_queues is EqualUnmodifiableListView) return _queues;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_queues);
+  }
 
   @override
   String toString() {
-    return 'HomeState.viewingQueues()';
+    return 'HomeState.viewingQueues(queues: $queues)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ViewingQueues);
+        (other.runtimeType == runtimeType &&
+            other is _$ViewingQueues &&
+            const DeepCollectionEquality().equals(other._queues, _queues));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_queues));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ViewingQueuesCopyWith<_$ViewingQueues> get copyWith =>
+      __$$ViewingQueuesCopyWithImpl<_$ViewingQueues>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Todo> todos) ready,
-    required TResult Function() viewingQueues,
+    required TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)
+        ready,
+    required TResult Function(List<QueueObject> queues) viewingQueues,
   }) {
-    return viewingQueues();
+    return viewingQueues(queues);
   }
 
   @override
@@ -515,10 +616,12 @@ class _$ViewingQueues implements ViewingQueues {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Todo> todos)? ready,
-    TResult? Function()? viewingQueues,
+    TResult? Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult? Function(List<QueueObject> queues)? viewingQueues,
   }) {
-    return viewingQueues?.call();
+    return viewingQueues?.call(queues);
   }
 
   @override
@@ -526,12 +629,14 @@ class _$ViewingQueues implements ViewingQueues {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Todo> todos)? ready,
-    TResult Function()? viewingQueues,
+    TResult Function(
+            List<Todo> today, List<Todo> upcoming, List<Todo> completed)?
+        ready,
+    TResult Function(List<QueueObject> queues)? viewingQueues,
     required TResult orElse(),
   }) {
     if (viewingQueues != null) {
-      return viewingQueues();
+      return viewingQueues(queues);
     }
     return orElse();
   }
@@ -575,5 +680,11 @@ class _$ViewingQueues implements ViewingQueues {
 }
 
 abstract class ViewingQueues implements HomeState {
-  const factory ViewingQueues() = _$ViewingQueues;
+  const factory ViewingQueues({required final List<QueueObject> queues}) =
+      _$ViewingQueues;
+
+  List<QueueObject> get queues;
+  @JsonKey(ignore: true)
+  _$$ViewingQueuesCopyWith<_$ViewingQueues> get copyWith =>
+      throw _privateConstructorUsedError;
 }

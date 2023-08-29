@@ -75,7 +75,7 @@ class RemoteQueueApi extends QueueApi {
   }
 
   @override
-  Future<void> updateQueue(void Function() callback) {
+  Future<void> updateQueueProperty(void Function() callback) {
     // TODO(demolaf): implement updateQueue
     throw UnimplementedError();
   }
