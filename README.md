@@ -1,7 +1,5 @@
 # Todo Sync (Offline-first) App
 
-![Coverage](coverage_badge.svg)
-[![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![HitCount](https://hits.dwyl.com/demolaf/todo-offline-first.svg?style=flat-square&show=unique)](http://hits.dwyl.com/demolaf/todo-offline-first)
 
 An Offline-first approach Todo App using Realm and Firebase.
@@ -35,6 +33,11 @@ $ flutter run --flavor production --target lib/main_production.dart
 
 ---
 ## Previews
+<img src="readMeAssets/ss-1.png" width="200"/>
+<img src="readMeAssets/ss-2.png" width="200"/>
+<img src="readMeAssets/ss-3.png" width="200"/>
+<img src="readMeAssets/ss-4.png" width="200"/>
+
 
 ## App Architecture and Folder Structure
 
