@@ -108,12 +108,18 @@ class __$$_InitialCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
+class _$_Initial with DiagnosticableTreeMixin implements _Initial {
   const _$_Initial();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'HomeState.initial()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'HomeState.initial'));
   }
 
   @override
@@ -228,12 +234,20 @@ class __$$HomeStateLoadingCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HomeStateLoading implements HomeStateLoading {
+class _$HomeStateLoading
+    with DiagnosticableTreeMixin
+    implements HomeStateLoading {
   const _$HomeStateLoading();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'HomeState.loading()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'HomeState.loading'));
   }
 
   @override
@@ -373,7 +387,7 @@ class __$$HomeStateReadyCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HomeStateReady implements HomeStateReady {
+class _$HomeStateReady with DiagnosticableTreeMixin implements HomeStateReady {
   const _$HomeStateReady(
       {required final List<Todo> today,
       required final List<Todo> upcoming,
@@ -407,8 +421,18 @@ class _$HomeStateReady implements HomeStateReady {
   }
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'HomeState.ready(today: $today, upcoming: $upcoming, completed: $completed)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'HomeState.ready'))
+      ..add(DiagnosticsProperty('today', today))
+      ..add(DiagnosticsProperty('upcoming', upcoming))
+      ..add(DiagnosticsProperty('completed', completed));
   }
 
   @override
@@ -563,7 +587,7 @@ class __$$ViewingQueuesCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ViewingQueues implements ViewingQueues {
+class _$ViewingQueues with DiagnosticableTreeMixin implements ViewingQueues {
   const _$ViewingQueues({required final List<QueueObject> queues})
       : _queues = queues;
 
@@ -576,8 +600,16 @@ class _$ViewingQueues implements ViewingQueues {
   }
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'HomeState.viewingQueues(queues: $queues)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'HomeState.viewingQueues'))
+      ..add(DiagnosticsProperty('queues', queues));
   }
 
   @override

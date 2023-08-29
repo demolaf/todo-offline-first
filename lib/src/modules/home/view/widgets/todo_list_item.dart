@@ -1,7 +1,8 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:todo_bloc/src/core/enums/todo_operation_type.dart';
 import 'package:todo_bloc/src/core/global_imports.dart';
 import 'package:todo_bloc/src/data/models/domains/todo.dart';
-import 'package:todo_bloc/src/modules/create_todo/view/create_todo_view.dart';
+import 'package:todo_bloc/src/modules/view_todo/view/view_todo_view.dart';
 
 class TodoSectionListItem extends StatelessWidget {
   const TodoSectionListItem({
@@ -16,7 +17,7 @@ class TodoSectionListItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          CreateTodoView.route(
+          ViewTodoView.route(
             todoOperationType: TodoOperationType.edit,
             todo: todo,
           ),

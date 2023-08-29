@@ -67,8 +67,6 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     required String todoId,
   }) async {
     try {
-      // If operation type is delete and todo_object hasn't been synced
-      // yet then remove from queue and return
       if (operationType == QueueOperationType.delete) {
         final exists = await _localQueueApi.checkAndRemoveExistingUnsyncedQueue(
           operationType: operationType,
@@ -92,20 +90,8 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     }
   }
 
-  // TODO(demolaf): This functions are meant to be running in the background
-  // This would be called by the timer which would then
-  // fetch queues to be synced and push to db and also create the queue in the
-  // doc ref
   Future<void> _pushUnSyncedQueuesAndTodosToRemote() async {
-    // 1. Get the todo_id in the queue and fetch the todo_object from local
-    // 2. Send the todo_object to remote
-    // 3. Send the queue_object to remote
-    // 4. Do I need to set syncedAt or something here?
-
-    // TODO(demolaf): Check where un-synced queues
-
     try {
-      // Query not synced queues
       final unSyncedQueues = _localQueueApi.fetchUnSyncedQueues();
 
       if (unSyncedQueues.isEmpty) {
@@ -113,8 +99,6 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
       }
 
       for (final unSyncedQueue in unSyncedQueues) {
-        // Get todo_object on which operation is to be carried out
-
         switch (unSyncedQueue.operationType.toOperationType()) {
           case QueueOperationType.create:
             await _handlePushSyncForCreateOperation(unSyncedQueue);
@@ -207,11 +191,7 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
         checked[queue.id.hexString] = false;
       }
 
-      // developer.log('Queues in remote $queuesInRemote}');
       for (final queue in queuesInRemote) {
-        // developer.log('Checking queue if need to pull $queue');
-        // Check for queues not on local and store those queues on local
-
         developer.log(
           'Contains ${queue.id} ${!checked.containsKey(queue.id.hexString)}',
         );
@@ -240,10 +220,6 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
   }
 
   Future<void> _handlePullSyncForCreate(QueueDTO queue) async {
-    // 1. Use the todo_id from the queue in remote
-    // 2. Use the todo_id to fetch the todo_object in remote
-    // 3. Store the todo_object in local
-    // 4. Do I need to mark synced or something here?
     try {
       final todo = await _remoteTodoApi.getTodo(queue.todoId);
 
@@ -288,7 +264,6 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
 
       if (todoFromRemoteDate.isAfter(todoFromLocalDate)) {
         developer.log('Found todo, updating & storing ${queue.todoId}');
-        // update todo_object in local because the one in local is outdated
         await _localTodoApi.updateTodo(todoFromRemote);
         await _markTodoAsSynced(todoFromRemote);
       }
@@ -301,11 +276,6 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
   }
 
   Future<void> _handlePullSyncForDeleteOperation(QueueDTO queue) async {
-    // 1. Use the todo_id from the queue in remote
-    // 2. Use the todo_id to fetch the todo_object in remote
-    // 3. Delete the todo_object in local
-    // 4. Do I need to mark synced or something here?
-
     try {
       developer.log('Found todo, deleting ${queue.todoId}');
       await _localTodoApi.deleteTodo(queue.todoId);
@@ -329,10 +299,6 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     }
   }
 
-  // TODO(demolaf): ensure this works the idea is to show synced state in ui
-  // if todo_object was modified you have to mark it as unsynced
-  // until pushed
-  // if todo_object was created you have to mark it as synced after push
   Future<void> _markTodoAsSynced(TodoDTO todo) async {
     try {
       await _localTodoApi.updateTodoProperty(() {

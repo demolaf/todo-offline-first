@@ -1,14 +1,14 @@
-part of 'create_todo_bloc.dart';
+part of 'view_todo_bloc.dart';
 
-abstract class CreateTodoEvent extends Equatable {
-  const CreateTodoEvent();
+abstract class ViewTodoEvent extends Equatable {
+  const ViewTodoEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class CreateTodoInitializationRequested extends CreateTodoEvent {
-  const CreateTodoInitializationRequested({
+class ViewTodoInitializationRequested extends ViewTodoEvent {
+  const ViewTodoInitializationRequested({
     required this.todoOperationType,
     this.id,
   });
@@ -20,7 +20,7 @@ class CreateTodoInitializationRequested extends CreateTodoEvent {
   List<Object> get props => [];
 }
 
-class TodoDataChanged extends CreateTodoEvent {
+class TodoDataChanged extends ViewTodoEvent {
   const TodoDataChanged({required this.todo});
 
   final Todo todo;
@@ -29,7 +29,7 @@ class TodoDataChanged extends CreateTodoEvent {
   List<Object> get props => [todo];
 }
 
-class SaveTodo extends CreateTodoEvent {
+class SaveTodo extends ViewTodoEvent {
   const SaveTodo({required this.todoOperationType});
 
   final TodoOperationType todoOperationType;
@@ -38,7 +38,7 @@ class SaveTodo extends CreateTodoEvent {
   List<Object> get props => [];
 }
 
-class DeleteTodo extends CreateTodoEvent {
+class DeleteTodo extends ViewTodoEvent {
   const DeleteTodo();
 
   @override
