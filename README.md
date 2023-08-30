@@ -1,4 +1,4 @@
-### An Offline-first approach Todo App using Realm and Firebase.
+### An Offline-first approach Todo App using Bloc, Realm and Firebase.
 [![HitCount](https://hits.dwyl.com/demolaf/todo-offline-first.svg?style=flat-square&show=unique)](http://hits.dwyl.com/demolaf/todo-offline-first)
 
 ### Content
