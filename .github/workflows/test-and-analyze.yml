@@ -2,6 +2,10 @@ name: Test & analyze
 
 on: [ push ]
 
+defaults:
+ run:
+  working-directory: ./frontend
+
 jobs:
   test:
     runs-on: ubuntu-latest
