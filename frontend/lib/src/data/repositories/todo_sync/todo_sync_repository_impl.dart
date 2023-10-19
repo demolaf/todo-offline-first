@@ -94,9 +94,7 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     try {
       final unSyncedQueues = _localQueueApi.fetchUnSyncedQueues();
 
-      if (unSyncedQueues.isEmpty) {
-        return;
-      }
+      if (unSyncedQueues.isEmpty) return;
 
       for (final unSyncedQueue in unSyncedQueues) {
         switch (unSyncedQueue.operationType.toOperationType()) {
@@ -157,15 +155,15 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     try {
       final unSyncedTodo = await _localTodoApi.getTodo(unSyncedQueue.todoId);
 
-      if (unSyncedTodo != null) {
-        await _remoteTodoApi.createTodo(unSyncedTodo.copyWith(synced: true));
-        await _remoteQueueApi.createQueue(
-          unSyncedQueue.copyWith(lastSyncedAt: now),
-        );
+      if (unSyncedTodo == null) return;
 
-        await _markTodoAsSynced(unSyncedTodo);
-        await _markQueueAsSynced(unSyncedQueue);
-      }
+      await _remoteTodoApi.createTodo(unSyncedTodo.copyWith(synced: true));
+      await _remoteQueueApi.createQueue(
+        unSyncedQueue.copyWith(lastSyncedAt: now),
+      );
+
+      await _markTodoAsSynced(unSyncedTodo);
+      await _markQueueAsSynced(unSyncedQueue);
     } catch (e) {
       developer.log(e.toString());
       rethrow;
@@ -175,30 +173,29 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
   Future<void> _pullQueuesAndTodosFromRemote() async {
     developer.log('Is pulling queues and todos from remote');
 
-    final checked = <String, bool>{};
+    final syncedQueues = <String, bool>{};
 
     try {
       final queuesInRemote = await _remoteQueueApi.getQueues();
 
-      if (queuesInRemote.isEmpty) {
-        developer.log('No queues to pull');
-        return;
-      }
+      if (queuesInRemote.isEmpty) return;
 
       final queuesInLocal = await _localQueueApi.getQueues();
 
       for (final queue in queuesInLocal) {
-        checked[queue.id.hexString] = false;
+        syncedQueues[queue.id.hexString] = true;
       }
 
       for (final queue in queuesInRemote) {
         developer.log(
-          'Contains ${queue.id} ${!checked.containsKey(queue.id.hexString)}',
+          'Contains'
+          ' ${queue.id} ${!syncedQueues.containsKey(queue.id.hexString)}',
         );
-        if (!checked.containsKey(queue.id.hexString)) {
-          developer.log('Queue being pulled ${queue.id}');
-          await _handlePull(queue: queue);
-        }
+
+        if (syncedQueues.containsKey(queue.id.hexString)) return;
+
+        developer.log('Queue being pulled ${queue.id}');
+        await _handlePull(queue: queue);
       }
     } catch (e) {
       developer.log(e.toString());
@@ -223,11 +220,11 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     try {
       final todo = await _remoteTodoApi.getTodo(queue.todoId);
 
-      if (todo != null) {
-        developer.log('Found todo, creating & storing ${queue.todoId}');
-        await _localTodoApi.createTodo(todo);
-        await _localQueueApi.createQueue(queue);
-      }
+      if (todo == null) return;
+
+      developer.log('Found todo, creating & storing ${queue.todoId}');
+      await _localTodoApi.createTodo(todo);
+      await _localQueueApi.createQueue(queue);
     } catch (e) {
       developer.log(e.toString());
       rethrow;
@@ -238,29 +235,21 @@ class TodoSyncRepositoryImpl implements TodoSyncRepository {
     try {
       final todoFromRemote = await _remoteTodoApi.getTodo(queue.todoId);
 
-      if (todoFromRemote == null) {
-        return;
-      }
+      if (todoFromRemote == null) return;
 
       final todoFromRemoteDate =
           DateTime.tryParse(todoFromRemote.lastModifiedAt);
 
-      if (todoFromRemoteDate == null) {
-        return;
-      }
+      if (todoFromRemoteDate == null) return;
 
       final todoFromLocal =
           await _localTodoApi.getTodo(todoFromRemote.id.hexString);
 
-      if (todoFromLocal == null) {
-        return;
-      }
+      if (todoFromLocal == null) return;
 
       final todoFromLocalDate = DateTime.tryParse(todoFromLocal.lastModifiedAt);
 
-      if (todoFromLocalDate == null) {
-        return;
-      }
+      if (todoFromLocalDate == null) return;
 
       if (todoFromRemoteDate.isAfter(todoFromLocalDate)) {
         developer.log('Found todo, updating & storing ${queue.todoId}');

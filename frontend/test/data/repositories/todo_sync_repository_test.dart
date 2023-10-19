@@ -260,7 +260,7 @@ void main() {
       when(() => todo.completed).thenReturn(false);
       when(() => todo.synced).thenReturn(false);
       when(() => todo.lastModifiedAt).thenReturn(
-          DateTime.parse('2023-08-28T21:57:43.627175').toIso8601String());
+          DateTime.parse('2023-08-29T21:57:43.627175').toIso8601String());
     });
 
     tearDown(() {
@@ -299,27 +299,33 @@ void main() {
       verify(() => localQueueApi.createQueue(any())).called(1);
     });
 
-    // test('if queue operation is update', () async {
-    //   print(todo_.lastModifiedAt);
-    //   when(() => queue.operationType)
-    //       .thenReturn(QueueOperationType.update.name);
-    //   when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => [queue]);
-    //   when(() => localQueueApi.getQueues()).thenAnswer((_) async => []);
-    //   when(() => remoteTodoApi.getTodo(any())).thenAnswer((_) async => todo_);
-    //   when(() => localTodoApi.getTodo(any())).thenAnswer((_) async => todo_);
-    //   when(() => localTodoApi.updateTodo(any())).thenAnswer((_) async => todo_);
-    //   when(() => localQueueApi.createQueue(any()))
-    //       .thenAnswer((_) async => queue);
-    //
-    //   await sut.needToPull();
-    //
-    //   verify(() => remoteQueueApi.getQueues()).called(1);
-    //   verify(() => localQueueApi.getQueues()).called(1);
-    //   verify(() => remoteTodoApi.getTodo(any())).called(1);
-    //   verify(() => localTodoApi.getTodo(any())).called(1);
-    //   verify(() => localTodoApi.updateTodo(any())).called(1);
-    //   verify(() => localQueueApi.createQueue(any())).called(1);
-    // });
+    test(
+        'if queue operation is update, fetch todo from remote and todo from '
+        'local, then check if todo from remote has the most recent modification'
+        'then update the todo in local with the one in remote and mark todo as'
+        'synced, then create a queue for the operation in local', () async {
+      when(() => queue.operationType)
+          .thenReturn(QueueOperationType.update.name);
+      when(() => remoteQueueApi.getQueues()).thenAnswer((_) async => [queue]);
+      when(() => localQueueApi.getQueues()).thenAnswer((_) async => []);
+      when(() => remoteTodoApi.getTodo(any())).thenAnswer((_) async => todo);
+      when(() => localTodoApi.getTodo(any())).thenAnswer((_) async =>
+          todo.copyWith(
+              time: DateTime.parse('2023-08-26T21:57:43.627175')
+                  .toIso8601String()));
+      when(() => localTodoApi.updateTodo(any())).thenAnswer((_) async => todo);
+      when(() => localQueueApi.createQueue(any()))
+          .thenAnswer((_) async => queue);
+
+      await sut.needToPull();
+
+      verify(() => remoteQueueApi.getQueues()).called(1);
+      verify(() => localQueueApi.getQueues()).called(1);
+      verify(() => remoteTodoApi.getTodo(any())).called(1);
+      verify(() => localTodoApi.getTodo(any())).called(1);
+      verify(() => localTodoApi.updateTodo(any())).called(1);
+      verify(() => localQueueApi.createQueue(any())).called(1);
+    });
 
     test(
         'if queue operation is delete, fetch queue and todo from remote '

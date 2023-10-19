@@ -95,15 +95,19 @@ class _ExtrasButtonState extends State<ExtrasButton>
     final size = renderBox.size;
 
     entry = OverlayEntry(
-      builder: (context) => Positioned(
-        width: size.width,
-        child: CompositedTransformFollower(
-          link: layerLink,
-          showWhenUnlinked: false,
-          offset: Offset(0, size.height + 16),
-          child: BlocProvider.value(
-            value: bloc,
-            child: const ExtrasMenu(),
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: hideExtrasMenu,
+        child: Positioned(
+          width: size.width,
+          child: CompositedTransformFollower(
+            link: layerLink,
+            showWhenUnlinked: false,
+            offset: Offset(0, size.height + 16),
+            child: BlocProvider.value(
+              value: bloc,
+              child: const ExtrasMenu(),
+            ),
           ),
         ),
       ),
