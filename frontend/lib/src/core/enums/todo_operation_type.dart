@@ -1,0 +1,4 @@
+enum TodoOperationType {
+  create,
+  edit,
+}
