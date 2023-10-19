@@ -38,7 +38,7 @@ class SignInView extends StatelessWidget {
             child: Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height * 0.05,
+                height: 44,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 alignment: Alignment.center,
@@ -56,12 +56,11 @@ class SignInView extends StatelessWidget {
                   },
                   builder: (context, isAuthenticating) {
                     if (isAuthenticating) {
-                      return SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: Theme.of(context).colorScheme.onBackground,
-                          strokeWidth: 3,
+                      return const FittedBox(
+                        child: SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator.adaptive(),
                         ),
                       );
                     }
