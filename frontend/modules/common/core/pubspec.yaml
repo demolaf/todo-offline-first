@@ -1,0 +1,23 @@
+name: core
+description: A Very Good Project created by Very Good CLI.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flex_color_scheme: ^7.2.0
+  flutter:
+    sdk: flutter
+  intl: ^0.18.0
+  moment_dart: ^1.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.0
+  very_good_analysis: ^5.0.0
+
+flutter:
+  uses-material-design: true

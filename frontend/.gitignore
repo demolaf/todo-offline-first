@@ -37,7 +37,7 @@ api_keys.json
 /dev/docs/pubspec.yaml
 /dev/integration_tests/**/xcuserdata
 /dev/integration_tests/**/Pods
-/packages/flutter/coverage/
+/modules/flutter/coverage/
 version
 
 # packages file containing multi-root paths
@@ -104,7 +104,7 @@ unlinked_spec.ds
 coverage/
 
 # Submodules
-packages/**/pubspec.lock
+modules/**/pubspec.lock
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -120,7 +120,7 @@ app.*.map.json
 !**/ios/**/default.mode2v3
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+!/modules/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
 !.vscode/extensions.json
 !.vscode/launch.json
